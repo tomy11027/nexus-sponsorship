@@ -1,0 +1,2060 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl" id="htmlRoot">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nexus 4.0 — المسابقة الوطنية للابتكار وريادة الأعمال</title>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@300;400;600;700;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:       #070C14;
+  --bg2:      #0C1422;
+  --bg3:      #111D30;
+  --panel:    #0F1928;
+  --panel2:   #152033;
+  --gold:     #C9A84C;
+  --gold-l:   #E8C97A;
+  --gold-d:   #8B6914;
+  --cyan:     #00D4FF;
+  --cyan-d:   #0099BB;
+  --cyan-glow:rgba(0,212,255,0.12);
+  --gold-glow:rgba(201,168,76,0.15);
+  --green:    #00FF9D;
+  --red:      #FF4D6D;
+  --text:     #E2EAF4;
+  --text-dim: #7A92B0;
+  --border:   rgba(0,212,255,0.15);
+  --border-g: rgba(201,168,76,0.2);
+  --white:    #FFFFFF;
+  --silver:   #8A9BB0;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'Cairo', 'Amiri', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  direction: rtl;
+  font-size: 13px;
+  line-height: 1.8;
+  position: relative;
+}
+
+/* ── Watermark logo background ── */
+body::before {
+  content: '';
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 520px;
+  height: 520px;
+  background: url('logo.png') center/contain no-repeat;
+  opacity: 0.04;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Ensure all direct children sit above the watermark */
+body > * { position: relative; z-index: 1; }
+
+/* ─── PRINT / PDF ─── */
+@media print {
+  /* Full color fidelity */
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+
+  /* Keep watermark in print */
+  body::before {
+    position: fixed;
+    opacity: 0.06;
+  }
+
+  /* Hide UI controls */
+  .theme-toggle-btn,
+  .no-print { display: none !important; }
+
+  /* Cover = page 1, fills the full first page */
+  .cover {
+    min-height: 100vh;
+    page-break-after: always;
+    break-after: page;
+  }
+
+  /* ── Every section header starts a NEW page ── */
+  .sec-head {
+    page-break-before: always;
+    break-before: page;
+    margin-top: 0 !important;
+    padding-top: 10px;
+  }
+
+  /* Reduce content wrapper padding for A4 */
+  .content { padding: 24px 32px 16px; }
+
+  /* Sections 03 & 04 share one page — suppress break before 04 */
+  .sec-head.no-page-break {
+    page-break-before: avoid !important;
+    break-before: avoid !important;
+    margin-top: 32px !important;
+  }
+  .sec-head + * { page-break-before: avoid; break-before: avoid; }
+  .sec-titles h2 { orphans: 3; widows: 3; }
+
+  /* Keep small components together on one page */
+  .stat-box,
+  .obj-item,
+  .aud-card,
+  .tl-item,
+  .theme-card,
+  .req-item,
+  .benefit-card,
+  .nature-box,
+  .contingency,
+  .media-box {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  /* Keep all sponsor cards on one page */
+  .sponsorship-block {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+  .sponsor-card {
+    page-break-inside: avoid;
+    break-inside: avoid;
+    margin-bottom: 8px;
+  }
+  /* Compress sponsor cards text/padding for print */
+  .sp-head { padding: 14px 20px !important; }
+  .sp-body { padding: 12px 20px !important; }
+  .sp-medal { font-size: 30px !important; }
+  .sp-title h3 { font-size: 16px !important; }
+  .sp-benefits { gap: 6px !important; }
+  .sp-benefit { font-size: 10.5px !important; line-height: 1.4 !important; }
+
+  /* Table rows don't split */
+  .org-table tr,
+  .budget-table tr { page-break-inside: avoid; break-inside: avoid; }
+
+  /* Timeline items stay together */
+  .tl-item { page-break-inside: avoid; break-inside: avoid; }
+
+  /* Footer at very end */
+  .doc-footer {
+    page-break-before: always;
+    break-before: page;
+  }
+
+  /* Remove shadows / blur for print clarity */
+  * { box-shadow: none !important; backdrop-filter: none !important; }
+
+  /* Keep readable font size */
+  body { font-size: 11px; line-height: 1.7; }
+
+  /* Grids stay as-is unless they overflow */
+  .stat-row          { grid-template-columns: repeat(3,1fr); }
+  .obj-grid          { grid-template-columns: 1fr 1fr; }
+  .audience-grid     { grid-template-columns: repeat(3,1fr); }
+  .themes-grid       { grid-template-columns: repeat(4,1fr); }
+  .tech-req-grid     { grid-template-columns: 1fr 1fr; }
+  .benefits-grid     { grid-template-columns: 1fr 1fr; }
+  .sp-benefits       { grid-template-columns: 1fr 1fr; }
+}
+
+/* ══════════════════════════════════════════
+   COVER
+══════════════════════════════════════════ */
+.cover {
+  position: relative;
+  min-height: 100vh;
+  background: radial-gradient(ellipse at 20% 30%, rgba(0,212,255,0.06) 0%, transparent 55%),
+              radial-gradient(ellipse at 80% 70%, rgba(201,168,76,0.07) 0%, transparent 55%),
+              linear-gradient(160deg, #070C14 0%, #0A1220 50%, #070C14 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 60px 40px;
+}
+
+/* SVG circuit background */
+.cover-svg {
+  position: absolute;
+  top:0; left:0; width:100%; height:100%;
+  opacity: 0.18;
+  pointer-events: none;
+}
+
+/* Logo placeholder top-right */
+.logo-placeholder {
+  position: absolute;
+  top: 30px;
+  right: 40px;
+  width: 90px;
+  height: 90px;
+  border: 1.5px dashed rgba(201,168,76,0.4);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.logo-placeholder span {
+  font-size: 9px;
+  color: rgba(201,168,76,0.5);
+  letter-spacing: 1px;
+  text-align: center;
+  font-family: 'Cairo', sans-serif;
+}
+.logo-placeholder .logo-icon { font-size: 24px; opacity: 0.4; }
+
+/* Top label */
+.cover-label {
+  font-family: 'Orbitron', monospace;
+  font-size: 9px;
+  letter-spacing: 4px;
+  color: var(--cyan);
+  border: 1px solid var(--border);
+  padding: 6px 22px;
+  border-radius: 30px;
+  margin-bottom: 44px;
+  position: relative;
+  z-index: 2;
+  background: rgba(0,212,255,0.04);
+}
+
+/* Main title block */
+.cover-title-wrap {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.nexus-text {
+  font-family: 'Orbitron', monospace;
+  font-size: 88px;
+  font-weight: 900;
+  color: transparent;
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-l) 40%, var(--gold-d) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  line-height: 1;
+  letter-spacing: -2px;
+  text-shadow: none;
+  filter: drop-shadow(0 0 30px rgba(201,168,76,0.35));
+}
+
+.version-text {
+  font-family: 'Orbitron', monospace;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--cyan);
+  letter-spacing: 6px;
+  display: block;
+  margin-top: -6px;
+  filter: drop-shadow(0 0 12px rgba(0,212,255,0.5));
+}
+
+.cover-arabic-title {
+  font-family: 'Amiri', serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.85);
+  margin-top: 18px;
+  letter-spacing: 0.5px;
+}
+
+.cover-tagline {
+  font-size: 13px;
+  color: var(--gold-l);
+  margin-top: 8px;
+  opacity: 0.8;
+  font-weight: 300;
+}
+
+/* Divider */
+.cover-divider {
+  width: 280px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), var(--cyan), var(--gold), transparent);
+  margin: 36px auto;
+  position: relative;
+  z-index: 2;
+  opacity: 0.6;
+}
+
+/* Info grid */
+.cover-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  max-width: 680px;
+  width: 100%;
+  position: relative;
+  z-index: 2;
+  margin-bottom: 44px;
+}
+
+.cover-card {
+  background: rgba(15,25,40,0.8);
+  border: 1px solid var(--border);
+  border-top: 2px solid var(--gold);
+  border-radius: 10px;
+  padding: 18px 14px;
+  text-align: center;
+  backdrop-filter: blur(10px);
+}
+
+.cover-card-icon { font-size: 22px; margin-bottom: 8px; }
+.cover-card-label { font-size: 9px; color: var(--cyan); letter-spacing: 2px; margin-bottom: 6px; }
+.cover-card-val { font-size: 12.5px; color: var(--text); font-weight: 600; line-height: 1.5; }
+
+.cover-footer-bar {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--gold-d), var(--gold), var(--cyan), var(--gold), var(--gold-d));
+}
+
+.cover-bottom {
+  position: absolute;
+  bottom: 20px;
+  font-size: 9px;
+  color: rgba(255,255,255,0.2);
+  letter-spacing: 3px;
+  font-family: 'Orbitron', monospace;
+  z-index: 2;
+}
+
+/* ══════════════════════════════════════════
+   CONTENT WRAPPER
+══════════════════════════════════════════ */
+.content {
+  max-width: 940px;
+  margin: 0 auto;
+  padding: 50px 40px 30px;
+}
+
+/* ── Section Header ── */
+.sec-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 26px;
+  margin-top: 48px;
+}
+
+.sec-num {
+  font-family: 'Orbitron', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--bg);
+  background: linear-gradient(135deg, var(--gold), var(--gold-d));
+  width: 40px; height: 40px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 0 20px rgba(201,168,76,0.25);
+}
+
+.sec-titles h2 {
+  font-family: 'Amiri', serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.2;
+}
+
+.sec-titles .en {
+  font-family: 'Orbitron', monospace;
+  font-size: 9px;
+  color: var(--cyan);
+  letter-spacing: 3px;
+  margin-top: 2px;
+}
+
+.sec-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, var(--gold), var(--cyan), transparent);
+  opacity: 0.3;
+}
+
+/* ── Panel / card base ── */
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 22px;
+}
+
+/* ══════════════════════════════════════════
+   SECTION 1 — OVERVIEW
+══════════════════════════════════════════ */
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.stat-box {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 16px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-box::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--gold), var(--cyan));
+}
+
+.stat-num {
+  font-family: 'Orbitron', monospace;
+  font-size: 30px;
+  font-weight: 900;
+  color: var(--gold-l);
+  line-height: 1;
+  margin-bottom: 8px;
+  filter: drop-shadow(0 0 8px rgba(201,168,76,0.3));
+}
+
+.stat-label {
+  font-size: 11px;
+  color: var(--text-dim);
+  letter-spacing: 0.5px;
+}
+
+.nature-box {
+  background: linear-gradient(135deg, var(--panel) 0%, var(--panel2) 100%);
+  border: 1px solid var(--border-g);
+  border-right: 3px solid var(--gold);
+  border-radius: 12px;
+  padding: 20px 22px;
+  margin-bottom: 20px;
+  font-size: 13.5px;
+  line-height: 1.9;
+}
+
+.nature-box strong { color: var(--gold-l); }
+
+/* Capacity bars */
+.cap-wrap { margin-top: 16px; }
+.cap-row { display:flex; align-items:center; gap:14px; margin-bottom:12px; }
+.cap-lbl { width:180px; font-size:11.5px; color:var(--text-dim); text-align:right; flex-shrink:0; }
+.cap-track { flex:1; height:12px; background:rgba(255,255,255,0.04); border-radius:6px; overflow:hidden; border:1px solid var(--border); }
+.cap-fill { height:100%; border-radius:6px; }
+.cap-fill.blue { background:linear-gradient(90deg,var(--cyan-d),var(--cyan)); box-shadow:0 0 8px rgba(0,212,255,0.3); }
+.cap-fill.gold { background:linear-gradient(90deg,var(--gold-d),var(--gold-l)); box-shadow:0 0 8px rgba(201,168,76,0.3); }
+.cap-val { font-family:'Orbitron',monospace; font-size:11px; color:var(--text); width:50px; text-align:center; }
+
+/* ══════════════════════════════════════════
+   SECTION 2 — OBJECTIVES
+══════════════════════════════════════════ */
+.obj-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.obj-item {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px;
+  border-right: 2px solid var(--cyan);
+}
+
+.obj-icon {
+  width: 34px; height: 34px;
+  background: rgba(0,212,255,0.08);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.obj-text { font-size: 12.5px; line-height: 1.7; color: var(--text); }
+
+/* ══════════════════════════════════════════
+   SECTION 3 — AUDIENCE
+══════════════════════════════════════════ */
+.audience-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.aud-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 16px;
+  text-align: center;
+}
+
+.aud-card-icon { font-size: 32px; margin-bottom: 10px; }
+.aud-card-title { font-size: 13px; font-weight: 700; color: var(--gold-l); margin-bottom: 6px; }
+.aud-card-desc { font-size: 11.5px; color: var(--text-dim); line-height: 1.6; }
+
+/* ══════════════════════════════════════════
+   SECTION 4 — ORG STRUCTURE
+══════════════════════════════════════════ */
+.org-table { width:100%; border-collapse:collapse; border-radius:12px; overflow:hidden; }
+.org-table thead { background:linear-gradient(135deg, #0A1828, #0F2040); }
+.org-table thead th {
+  padding: 14px 18px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--cyan);
+  letter-spacing: 1.5px;
+  text-align: right;
+  border-bottom: 1px solid var(--border);
+}
+.org-table tbody tr { border-bottom: 1px solid rgba(255,255,255,0.04); }
+.org-table tbody tr:nth-child(odd)  { background: var(--panel); }
+.org-table tbody tr:nth-child(even) { background: var(--panel2); }
+.org-table tbody td { padding: 14px 18px; font-size: 12.5px; vertical-align: middle; }
+
+.role-tag {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--gold-d), var(--gold));
+  color: var(--bg);
+  font-size: 9px;
+  font-weight: 900;
+  padding: 3px 10px;
+  border-radius: 20px;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.name-cell { font-weight: 700; color: var(--gold-l); font-size: 13px; }
+
+/* ══════════════════════════════════════════
+   SECTION 5 — TIMELINE
+══════════════════════════════════════════ */
+.timeline { position: relative; padding-right: 30px; }
+.timeline::before {
+  content: '';
+  position: absolute;
+  right: 8px; top: 0; bottom: 0;
+  width: 2px;
+  background: linear-gradient(180deg, var(--gold), var(--cyan), var(--gold));
+  opacity: 0.4;
+}
+
+.tl-item {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  margin-bottom: 14px;
+  position: relative;
+}
+
+.tl-dot {
+  position: absolute;
+  right: -34px;
+  top: 14px;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  border: 2px solid var(--gold);
+  background: var(--bg);
+  box-shadow: 0 0 8px rgba(201,168,76,0.4);
+  flex-shrink: 0;
+}
+
+.tl-time {
+  font-family: 'Orbitron', monospace;
+  font-size: 10px;
+  color: var(--cyan);
+  background: rgba(0,212,255,0.06);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 6px 12px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  min-width: 130px;
+  text-align: center;
+  margin-top: 6px;
+}
+
+.tl-body {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 18px;
+  flex: 1;
+}
+
+.tl-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--gold-l);
+  margin-bottom: 4px;
+}
+
+.tl-desc { font-size: 12px; color: var(--text-dim); line-height: 1.6; }
+
+.tl-icon { font-size: 18px; margin-bottom: 4px; }
+
+/* ══════════════════════════════════════════
+   SECTION 6 — TECHNICAL
+══════════════════════════════════════════ */
+.themes-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.theme-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-top: 2px solid var(--cyan);
+  border-radius: 10px;
+  padding: 18px 12px;
+  text-align: center;
+}
+
+.theme-icon { font-size: 26px; margin-bottom: 8px; }
+.theme-name { font-size: 12px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+.theme-desc { font-size: 10px; color: var(--text-dim); line-height: 1.5; }
+
+.tech-req-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.req-item {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 12.5px;
+}
+
+.req-icon { font-size: 20px; flex-shrink: 0; }
+
+.media-box {
+  background: var(--panel);
+  border: 1px solid var(--border-g);
+  border-right: 3px solid var(--gold);
+  border-radius: 10px;
+  padding: 18px 22px;
+  font-size: 12.5px;
+  line-height: 1.9;
+}
+
+.media-tags { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
+.media-tag {
+  background: rgba(0,212,255,0.07);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 4px 14px;
+  font-size: 11px;
+  color: var(--cyan);
+}
+.media-tag.gold-tag {
+  background: rgba(201,168,76,0.07);
+  border-color: var(--border-g);
+  color: var(--gold-l);
+}
+
+/* ══════════════════════════════════════════
+   SECTION 7 — BUDGET
+══════════════════════════════════════════ */
+.budget-table { width:100%; border-collapse:collapse; border-radius:12px; overflow:hidden; margin-bottom:16px; }
+.budget-table thead { background:linear-gradient(135deg,#0A1828,#0F2040); }
+.budget-table thead th {
+  padding: 13px 16px;
+  font-size: 11px; font-weight:700;
+  color: var(--cyan); letter-spacing:1px;
+  text-align:right;
+  border-bottom:1px solid var(--border);
+}
+.budget-table tbody tr:nth-child(odd)  { background:var(--panel); }
+.budget-table tbody tr:nth-child(even) { background:var(--panel2); }
+.budget-table tbody tr { border-bottom:1px solid rgba(255,255,255,0.03); }
+.budget-table tbody td { padding:13px 16px; font-size:12px; vertical-align:middle; }
+.budget-table tfoot { background:linear-gradient(135deg,#0A1828,#0F2040); }
+.budget-table tfoot td { padding:13px 16px; font-size:12px; font-weight:700; color:var(--gold-l); }
+
+.amt { font-family:'Orbitron',monospace; font-size:11px; color:var(--gold-l); direction:ltr; display:inline-block; }
+.amt-tbd { color:var(--text-dim); font-style:italic; font-size:11px; }
+
+.contingency {
+  background: rgba(201,168,76,0.05);
+  border: 1px solid var(--border-g);
+  border-right: 3px solid var(--gold);
+  border-radius: 10px;
+  padding: 16px 20px;
+  font-size: 12.5px;
+  line-height: 1.8;
+}
+
+/* ══════════════════════════════════════════
+   SECTION 8 — COMPANY BENEFITS
+══════════════════════════════════════════ */
+.benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.benefit-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 18px;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  border-right: 2px solid var(--green);
+}
+
+.benefit-icon-box {
+  width: 36px; height: 36px;
+  background: rgba(0,255,157,0.06);
+  border: 1px solid rgba(0,255,157,0.2);
+  border-radius: 8px;
+  display: flex; align-items:center; justify-content:center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.benefit-title { font-size:12.5px; font-weight:700; color: #00FF9D; margin-bottom:4px; }
+.benefit-desc  { font-size:11.5px; color:var(--text-dim); line-height:1.6; }
+
+/* ══════════════════════════════════════════
+   SECTION 9 — SPONSORSHIP
+══════════════════════════════════════════ */
+.sponsor-card {
+  border-radius: 14px;
+  overflow: hidden;
+  margin-bottom: 18px;
+  border: 1px solid transparent;
+}
+
+.sponsor-card.gold  { border-color: rgba(201,168,76,0.3); }
+.sponsor-card.silver{ border-color: rgba(138,155,176,0.25); }
+.sponsor-card.bronze{ border-color: rgba(160,104,74,0.25); }
+
+.sp-head {
+  padding: 22px 26px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.sponsor-card.gold   .sp-head { background:linear-gradient(135deg,#1A0F00,#2E1E00); border-bottom:1px solid rgba(201,168,76,0.3); }
+.sponsor-card.silver .sp-head { background:linear-gradient(135deg,#0F1820,#182A3C); border-bottom:1px solid rgba(138,155,176,0.2); }
+.sponsor-card.bronze .sp-head { background:linear-gradient(135deg,#1A0A00,#2E1400); border-bottom:1px solid rgba(160,104,74,0.2); }
+
+.sp-medal { font-size: 42px; }
+
+.sp-title h3 { font-family:'Amiri',serif; font-size:22px; font-weight:700; }
+.sp-title .sub { font-size:10px; letter-spacing:2px; margin-top:3px; font-weight:300; font-family:'Orbitron',monospace; }
+
+.sponsor-card.gold   .sp-title h3  { color:var(--gold-l); }
+.sponsor-card.silver .sp-title h3  { color:#C8D8E8; }
+.sponsor-card.bronze .sp-title h3  { color:#D4956A; }
+.sponsor-card.gold   .sp-title .sub { color:rgba(201,168,76,0.5); }
+.sponsor-card.silver .sp-title .sub { color:rgba(138,155,176,0.5); }
+.sponsor-card.bronze .sp-title .sub { color:rgba(160,104,74,0.5); }
+
+.sp-body {
+  background: var(--panel);
+  padding: 20px 26px;
+}
+
+.sp-benefits {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.sp-benefit {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--text);
+}
+
+.sp-bi { font-size: 14px; flex-shrink:0; margin-top:2px; }
+
+/* ══════════════════════════════════════════
+   JUDGING CRITERIA
+══════════════════════════════════════════ */
+.criteria-table { width:100%; border-collapse:collapse; border-radius:12px; overflow:hidden; }
+.criteria-table thead { background:linear-gradient(135deg,#0A1828,#0F2040); }
+.criteria-table thead th {
+  padding:12px 16px; font-size:11px; font-weight:700;
+  color:var(--cyan); letter-spacing:1px;
+  text-align:right; border-bottom:1px solid var(--border);
+}
+.criteria-table tbody tr:nth-child(odd)  { background:var(--panel); }
+.criteria-table tbody tr:nth-child(even) { background:var(--panel2); }
+.criteria-table tbody td { padding:12px 16px; font-size:12px; }
+
+.pct-bar { display:flex; align-items:center; gap:10px; }
+.pct-track { flex:1; height:8px; background:rgba(255,255,255,0.05); border-radius:4px; overflow:hidden; }
+.pct-fill { height:100%; border-radius:4px; background:linear-gradient(90deg,var(--cyan-d),var(--cyan)); }
+.pct-num { font-family:'Orbitron',monospace; font-size:10px; color:var(--cyan); width:35px; text-align:left; direction:ltr; }
+
+/* ══════════════════════════════════════════
+   FOOTER
+══════════════════════════════════════════ */
+.doc-footer {
+  background: linear-gradient(135deg, var(--bg2), var(--bg3));
+  border-top: 1px solid var(--border);
+  padding: 40px;
+  text-align: center;
+  margin-top: 50px;
+}
+
+.doc-footer h3 {
+  font-family: 'Orbitron', monospace;
+  font-size: 14px;
+  color: var(--gold-l);
+  letter-spacing: 3px;
+  margin-bottom: 6px;
+}
+
+.footer-ar {
+  font-family: 'Amiri', serif;
+  font-size: 18px;
+  color: rgba(255,255,255,0.7);
+  margin-bottom: 16px;
+}
+
+.footer-div {
+  width: 200px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), var(--cyan), transparent);
+  margin: 16px auto;
+  opacity: 0.5;
+}
+
+.footer-note { font-size:11px; color:var(--text-dim); letter-spacing:1px; }
+
+/* ══════════════════════════════════════════
+   UTILITY
+══════════════════════════════════════════ */
+.mt-4 { margin-top:16px; }
+.mb-4 { margin-bottom:16px; }
+.cyan { color:var(--cyan); }
+.gold { color:var(--gold-l); }
+.dim  { color:var(--text-dim); }
+
+/* ══════════════════════════════════════════
+   THEME TOGGLE
+══════════════════════════════════════════ */
+.theme-toggle-btn {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 9999;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 2px solid var(--gold);
+  background: var(--panel);
+  color: var(--gold-l);
+  font-size: 22px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 16px rgba(201,168,76,0.25);
+  transition: all 0.4s ease;
+  backdrop-filter: blur(10px);
+}
+.theme-toggle-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 24px rgba(201,168,76,0.4);
+}
+
+/* ══════════════════════════════════════════
+   LANGUAGE SWITCHER
+══════════════════════════════════════════ */
+.lang-switcher {
+  position: fixed;
+  top: 20px;
+  left: 84px;
+  z-index: 9999;
+  display: flex;
+  gap: 6px;
+  backdrop-filter: blur(10px);
+}
+.lang-btn {
+  height: 36px;
+  padding: 0 14px;
+  border-radius: 20px;
+  border: 2px solid var(--cyan);
+  background: var(--panel);
+  color: var(--cyan);
+  font-size: 11px;
+  font-family: 'Orbitron', monospace;
+  font-weight: 700;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 10px rgba(0,212,255,0.15);
+}
+.lang-btn:hover {
+  background: rgba(0,212,255,0.1);
+  box-shadow: 0 0 18px rgba(0,212,255,0.35);
+  transform: translateY(-1px);
+}
+.lang-btn.active {
+  background: var(--cyan);
+  color: var(--bg);
+  box-shadow: 0 0 18px rgba(0,212,255,0.45);
+}
+body.light-theme .lang-btn {
+  border-color: #1565C0;
+  color: #1565C0;
+  background: #fff;
+}
+body.light-theme .lang-btn.active {
+  background: #1565C0;
+  color: #fff;
+}
+
+/* ══════════════════════════════════════════
+   WHITE / LIGHT THEME — Premium Redesign
+══════════════════════════════════════════ */
+body.light-theme {
+  --bg:        #FFFFFF;
+  --bg2:       #F7F7F7;
+  --bg3:       #EFEFEF;
+  --panel:     #FFFFFF;
+  --panel2:    #FAFAFA;
+  --gold:      #B8860B;
+  --gold-l:    #C9960E;
+  --gold-d:    #8B6000;
+  --cyan:      #1565C0;
+  --cyan-d:    #0D47A1;
+  --cyan-glow: rgba(21,101,192,0.08);
+  --gold-glow: rgba(184,134,11,0.1);
+  --green:     #2E7D32;
+  --red:       #C62828;
+  --text:      #0D1B3E;
+  --text-dim:  #4A5568;
+  --border:    rgba(21,101,192,0.15);
+  --border-g:  rgba(184,134,11,0.2);
+  --silver:    #607D8B;
+}
+
+/* Body & scrollbar */
+body.light-theme {
+  background: var(--bg);
+}
+body.light-theme::-webkit-scrollbar { width: 8px; }
+body.light-theme::-webkit-scrollbar-track { background: #E8EEF8; }
+body.light-theme::-webkit-scrollbar-thumb { background: #9BB0D4; border-radius: 4px; }
+
+/* Cover */
+body.light-theme .cover {
+  background:
+    radial-gradient(ellipse at 15% 25%, rgba(21,101,192,0.07) 0%, transparent 50%),
+    radial-gradient(ellipse at 85% 75%, rgba(184,134,11,0.08) 0%, transparent 50%),
+    linear-gradient(160deg, #EEF2FF 0%, #F5F8FF 40%, #EDF1FB 100%);
+}
+body.light-theme .cover-svg { opacity: 0.07; }
+body.light-theme .cover-label {
+  color: #1565C0;
+  border-color: rgba(21,101,192,0.25);
+  background: rgba(21,101,192,0.05);
+}
+body.light-theme .cover-arabic-title { color: #0D1B3E; }
+body.light-theme .cover-tagline { color: #6B7A99; }
+body.light-theme .cover-bottom { color: rgba(13,27,62,0.18); }
+body.light-theme .cover-footer-bar {
+  background: linear-gradient(90deg, #8B6000, #C9960E, #1565C0, #C9960E, #8B6000);
+}
+
+/* Cover cards */
+body.light-theme .cover-card {
+  background: #FFFFFF;
+  border: 1px solid rgba(21,101,192,0.12);
+  border-top: 2px solid #C9960E;
+  box-shadow: 0 4px 20px rgba(13,27,62,0.07);
+}
+body.light-theme .cover-card-label { color: #1565C0; }
+body.light-theme .cover-card-val { color: #0D1B3E; }
+
+/* Section headers */
+body.light-theme .sec-num {
+  background: linear-gradient(135deg, #C9960E, #8B6000);
+  box-shadow: 0 4px 12px rgba(184,134,11,0.2);
+}
+body.light-theme .sec-titles h2 { color: #0D1B3E; }
+body.light-theme .sec-titles .en { color: #1565C0; }
+body.light-theme .sec-line {
+  background: linear-gradient(90deg, #C9960E, #1565C0, transparent);
+  opacity: 0.4;
+}
+
+/* Stat boxes */
+body.light-theme .stat-box {
+  background: #FFFFFF;
+  border: 1px solid rgba(21,101,192,0.1);
+  box-shadow: 0 4px 16px rgba(13,27,62,0.06);
+}
+body.light-theme .stat-box::before {
+  background: linear-gradient(90deg, #C9960E, #1565C0);
+}
+body.light-theme .stat-num { color: #1565C0; filter: none; }
+body.light-theme .stat-label { color: #4A5568; }
+
+/* Nature / info boxes */
+body.light-theme .nature-box {
+  background: linear-gradient(135deg, #FFFFFF 0%, #F6F8FF 100%);
+  border: 1px solid rgba(21,101,192,0.1);
+  border-right: 3px solid #C9960E;
+  box-shadow: 0 4px 16px rgba(13,27,62,0.05);
+}
+body.light-theme .nature-box strong { color: #B8860B; }
+
+/* Capacity bars */
+body.light-theme .cap-track {
+  background: rgba(13,27,62,0.05);
+  border-color: rgba(21,101,192,0.12);
+}
+body.light-theme .cap-lbl { color: #4A5568; }
+body.light-theme .cap-val { color: #0D1B3E; }
+
+/* Panels */
+body.light-theme .panel {
+  background: #FFFFFF;
+  border: 1px solid rgba(21,101,192,0.1);
+  box-shadow: 0 4px 16px rgba(13,27,62,0.06);
+}
+
+/* Objective items */
+body.light-theme .obj-item {
+  background: #FFFFFF;
+  border: 1px solid rgba(21,101,192,0.1);
+  border-right: 2px solid #1565C0;
+  box-shadow: 0 3px 12px rgba(13,27,62,0.05);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+body.light-theme .obj-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(13,27,62,0.1);
+}
+body.light-theme .obj-icon {
+  background: rgba(21,101,192,0.07);
+  border-color: rgba(21,101,192,0.15);
+}
+body.light-theme .obj-text { color: #0D1B3E; }
+
+/* Audience cards */
+body.light-theme .aud-card {
+  background: #FFFFFF;
+  border: 1px solid rgba(21,101,192,0.1);
+  box-shadow: 0 4px 16px rgba(13,27,62,0.06);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+body.light-theme .aud-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(13,27,62,0.1);
+}
+body.light-theme .aud-card-title { color: #B8860B; }
+body.light-theme .aud-card-desc { color: #4A5568; }
+
+/* Org table */
+body.light-theme .org-table { box-shadow: 0 4px 20px rgba(13,27,62,0.08); border-radius: 12px; }
+body.light-theme .org-table thead { background: linear-gradient(135deg, #0D1B3E, #1A3060); }
+body.light-theme .org-table thead th { color: #90CAF9; }
+body.light-theme .org-table tbody tr:nth-child(odd)  { background: #FFFFFF; }
+body.light-theme .org-table tbody tr:nth-child(even) { background: #F6F8FF; }
+body.light-theme .org-table tbody tr { border-bottom: 1px solid rgba(21,101,192,0.06); }
+body.light-theme .org-table tbody td { color: #0D1B3E; }
+body.light-theme .name-cell { color: #1565C0; }
+body.light-theme .role-tag {
+  background: linear-gradient(135deg, #8B6000, #C9960E);
+  color: #FFF9F0;
+}
+
+/* Timeline */
+body.light-theme .timeline::before {
+  background: linear-gradient(180deg, #C9960E, #1565C0, #C9960E);
+  opacity: 0.35;
+}
+body.light-theme .tl-dot {
+  background: #F0F4FF;
+  border-color: #C9960E;
+}
+body.light-theme .tl-time {
+  color: #1565C0;
+  border-color: rgba(21,101,192,0.2);
+  background: rgba(21,101,192,0.05);
+}
+body.light-theme .tl-body {
+  background: #FFFFFF;
+  border: 1px solid rgba(21,101,192,0.1);
+  box-shadow: 0 3px 12px rgba(13,27,62,0.05);
+}
+body.light-theme .tl-title { color: #B8860B; }
+body.light-theme .tl-desc { color: #4A5568; }
+
+/* Theme cards (technical) */
+body.light-theme .theme-card {
+  background: #FFFFFF;
+  border: 1px solid rgba(21,101,192,0.1);
+  border-top: 2px solid #1565C0;
+  box-shadow: 0 4px 14px rgba(13,27,62,0.06);
+  transition: transform 0.2s;
+}
+body.light-theme .theme-card:hover { transform: translateY(-2px); }
+body.light-theme .theme-name { color: #0D1B3E; }
+body.light-theme .theme-desc { color: #4A5568; }
+
+/* Req items */
+body.light-theme .req-item {
+  background: #FFFFFF;
+  border: 1px solid rgba(21,101,192,0.1);
+  box-shadow: 0 2px 10px rgba(13,27,62,0.05);
+  color: #0D1B3E;
+}
+
+/* Media box */
+body.light-theme .media-box {
+  background: linear-gradient(135deg, #FFFFFF, #F6F8FF);
+  border: 1px solid rgba(184,134,11,0.15);
+  border-right: 3px solid #C9960E;
+  box-shadow: 0 4px 16px rgba(13,27,62,0.05);
+}
+body.light-theme .media-tag {
+  background: rgba(21,101,192,0.07);
+  border-color: rgba(21,101,192,0.18);
+  color: #1565C0;
+}
+body.light-theme .media-tag.gold-tag {
+  background: rgba(184,134,11,0.07);
+  border-color: rgba(184,134,11,0.2);
+  color: #8B6000;
+}
+
+/* Budget table */
+body.light-theme .budget-table { box-shadow: 0 4px 20px rgba(13,27,62,0.08); border-radius: 12px; }
+body.light-theme .budget-table thead { background: linear-gradient(135deg, #0D1B3E, #1A3060); }
+body.light-theme .budget-table thead th { color: #90CAF9; }
+body.light-theme .budget-table tfoot { background: linear-gradient(135deg, #0D1B3E, #1A3060); }
+body.light-theme .budget-table tfoot td { color: #FFD54F; }
+body.light-theme .budget-table tbody tr:nth-child(odd)  { background: #FFFFFF; }
+body.light-theme .budget-table tbody tr:nth-child(even) { background: #F6F8FF; }
+body.light-theme .budget-table tbody td { color: #0D1B3E; }
+body.light-theme .amt { color: #B8860B; }
+body.light-theme .amt-tbd { color: #607D8B; }
+
+/* Contingency */
+body.light-theme .contingency {
+  background: rgba(184,134,11,0.05);
+  border: 1px solid rgba(184,134,11,0.15);
+  border-right: 3px solid #C9960E;
+}
+
+/* Benefits */
+body.light-theme .benefit-card {
+  background: #FFFFFF;
+  border: 1px solid rgba(46,125,50,0.12);
+  border-right: 2px solid #2E7D32;
+  box-shadow: 0 4px 14px rgba(13,27,62,0.06);
+  transition: transform 0.2s;
+}
+body.light-theme .benefit-card:hover { transform: translateY(-2px); }
+body.light-theme .benefit-icon-box {
+  background: rgba(46,125,50,0.07);
+  border-color: rgba(46,125,50,0.2);
+}
+body.light-theme .benefit-title { color: #2E7D32; }
+body.light-theme .benefit-desc { color: #4A5568; }
+
+/* Sponsor cards */
+body.light-theme .sponsor-card.gold  { border-color: rgba(184,134,11,0.3); box-shadow: 0 6px 24px rgba(184,134,11,0.08); }
+body.light-theme .sponsor-card.silver{ border-color: rgba(96,125,139,0.25); box-shadow: 0 6px 24px rgba(13,27,62,0.06); }
+body.light-theme .sponsor-card.bronze{ border-color: rgba(160,104,74,0.25); box-shadow: 0 6px 24px rgba(160,104,74,0.06); }
+body.light-theme .sponsor-card.gold   .sp-head { background: linear-gradient(135deg, #FFF8E1, #FFF3CC); border-bottom-color: rgba(184,134,11,0.2); }
+body.light-theme .sponsor-card.silver .sp-head { background: linear-gradient(135deg, #ECEFF1, #E3F2FD); border-bottom-color: rgba(96,125,139,0.15); }
+body.light-theme .sponsor-card.bronze .sp-head { background: linear-gradient(135deg, #FFF3E0, #FFE0B2); border-bottom-color: rgba(160,104,74,0.15); }
+body.light-theme .sponsor-card .sp-body {
+  background: #FFFFFF;
+}
+body.light-theme .sp-benefit { color: #0D1B3E; }
+body.light-theme .sponsor-card.gold   .sp-title h3 { color: #8B6000; }
+body.light-theme .sponsor-card.silver .sp-title h3 { color: #37474F; }
+body.light-theme .sponsor-card.bronze .sp-title h3 { color: #6D4C41; }
+
+/* Footer */
+body.light-theme .doc-footer {
+  background: linear-gradient(135deg, #0D1B3E, #1A3060);
+  border-top: 1px solid rgba(21,101,192,0.2);
+}
+body.light-theme .doc-footer h3 { color: #FFD54F; }
+body.light-theme .footer-ar { color: rgba(255,255,255,0.8); }
+body.light-theme .footer-note { color: rgba(255,255,255,0.45); }
+body.light-theme .footer-div { background: linear-gradient(90deg, transparent, #C9960E, #1565C0, transparent); }
+
+/* Toggle button */
+body.light-theme .theme-toggle-btn {
+  background: #FFFFFF;
+  border-color: #1565C0;
+  color: #1565C0;
+  box-shadow: 0 4px 16px rgba(13,27,62,0.15);
+}
+body.light-theme .theme-toggle-btn:hover {
+  box-shadow: 0 6px 20px rgba(21,101,192,0.25);
+}
+
+/* Winner panel */
+body.light-theme .panel[style*="gold"] {
+  background: linear-gradient(135deg, #FFFEF6, #FFF8E1);
+}
+
+/* Pct bars in light mode */
+body.light-theme .pct-track { background: rgba(13,27,62,0.06); }
+body.light-theme .pct-fill { background: linear-gradient(90deg, #0D47A1, #1565C0); }
+body.light-theme .pct-num { color: #1565C0; }
+
+@media print {
+  .theme-toggle-btn, .lang-switcher { display: none !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════ COVER ══════════════ -->
+<div class="cover">
+
+  <!-- Circuit SVG background -->
+  <svg class="cover-svg" viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="lg1" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" style="stop-color:#00D4FF;stop-opacity:0"/>
+        <stop offset="50%" style="stop-color:#00D4FF;stop-opacity:1"/>
+        <stop offset="100%" style="stop-color:#C9A84C;stop-opacity:0"/>
+      </linearGradient>
+    </defs>
+    <!-- horizontal lines -->
+    <line x1="0" y1="150" x2="400" y2="150" stroke="#00D4FF" stroke-width="0.5" stroke-dasharray="4,8"/>
+    <line x1="800" y1="150" x2="1200" y2="150" stroke="#C9A84C" stroke-width="0.5" stroke-dasharray="4,8"/>
+    <line x1="0" y1="650" x2="350" y2="650" stroke="#C9A84C" stroke-width="0.5" stroke-dasharray="4,8"/>
+    <line x1="850" y1="650" x2="1200" y2="650" stroke="#00D4FF" stroke-width="0.5" stroke-dasharray="4,8"/>
+    <!-- vertical -->
+    <line x1="100" y1="0" x2="100" y2="300" stroke="#00D4FF" stroke-width="0.5" stroke-dasharray="3,9"/>
+    <line x1="1100" y1="500" x2="1100" y2="800" stroke="#C9A84C" stroke-width="0.5" stroke-dasharray="3,9"/>
+    <!-- nodes -->
+    <circle cx="100" cy="150" r="4" fill="#00D4FF" opacity="0.7"/>
+    <circle cx="400" cy="150" r="3" fill="#C9A84C" opacity="0.6"/>
+    <circle cx="1100" cy="650" r="4" fill="#C9A84C" opacity="0.7"/>
+    <circle cx="800" cy="150" r="3" fill="#00D4FF" opacity="0.6"/>
+    <!-- big rings -->
+    <circle cx="600" cy="400" r="280" fill="none" stroke="#00D4FF" stroke-width="0.3" stroke-dasharray="6,12"/>
+    <circle cx="600" cy="400" r="340" fill="none" stroke="#C9A84C" stroke-width="0.2" stroke-dasharray="3,20"/>
+    <!-- diagonal -->
+    <line x1="0" y1="0" x2="200" y2="200" stroke="#00D4FF" stroke-width="0.3" stroke-dasharray="2,14"/>
+    <line x1="1200" y1="0" x2="1000" y2="200" stroke="#C9A84C" stroke-width="0.3" stroke-dasharray="2,14"/>
+  </svg>
+
+  <!-- University Logo -->
+  <div class="logo-placeholder" style="border:none;background:transparent;">
+    <img src="University_Logo.png" alt="شعار الجامعة"
+         style="width:85px;height:85px;object-fit:contain;filter:drop-shadow(0 0 8px rgba(201,168,76,0.35));">
+  </div>
+
+  <!-- Top Badges -->
+  <div style="display:flex; flex-direction:column; align-items:center; gap:12px; z-index:10; width:100%; max-width:600px; margin-bottom:32px;">
+    <div style="background:rgba(201,168,76,0.1); border:1px solid rgba(201,168,76,0.3); border-bottom:3px solid var(--gold); padding:8px 24px; border-radius:8px; text-align:center; white-space:nowrap;">
+      <strong id="cover-badge" style="color:var(--gold-l); font-size:14px;"
+        data-ar="👑 الملف الخاص بالرعاة والشركاء (Sponsorship Proposal)"
+        data-en="👑 Official Sponsorship Proposal — Partners &amp; Sponsors"
+        data-fr="👑 Dossier Officiel de Parrainage — Partenaires &amp; Sponsors"
+      >👑 الملف الخاص بالرعاة والشركاء (Sponsorship Proposal)</strong>
+    </div>
+  </div>
+
+  <div class="cover-title-wrap">
+    <div class="nexus-text">NEXUS</div>
+    <span class="version-text">4.0</span>
+    <div class="cover-arabic-title" id="cover-title"
+      data-ar="المسابقة الوطنية للابتكار وريادة الأعمال"
+      data-en="National Innovation &amp; Entrepreneurship Competition"
+      data-fr="Concours National d'Innovation et d'Entrepreneuriat"
+    >المسابقة الوطنية للابتكار وريادة الأعمال</div>
+    <div class="cover-tagline" id="cover-tagline"
+      data-ar="حيث تلتقي الأفكار بالفرص — نقطة التقاء الابتكار والصناعة"
+      data-en="Where Ideas Meet Opportunities — The Nexus of Innovation &amp; Industry"
+      data-fr="Là où les idées rencontrent les opportunités — Le carrefour de l'innovation"
+    >حيث تلتقي الأفكار بالفرص — نقطة التقاء الابتكار والصناعة</div>
+  </div>
+
+  <div class="cover-divider"></div>
+
+  <div class="cover-grid">
+    <div class="cover-card">
+      <div class="cover-card-icon">📅</div>
+      <div class="cover-card-label">DATE</div>
+      <div class="cover-card-val"
+        data-ar="20 سبتمبر – 10 أكتوبر 2026"
+        data-en="20 September – 10 October 2026"
+        data-fr="20 Septembre – 10 Octobre 2026"
+      >20 سبتمبر – 10 أكتوبر 2026</div>
+    </div>
+    <div class="cover-card">
+      <div class="cover-card-icon">📍</div>
+      <div class="cover-card-label">LOCATION</div>
+      <div class="cover-card-val"
+        data-ar="قاعة المركب الرياضي<br>جامعة البليدة"
+        data-en="Sports Complex Hall<br>University of Blida"
+        data-fr="Salle du Complexe Sportif<br>Université de Blida"
+      >قاعة المركب الرياضي<br>جامعة البليدة</div>
+    </div>
+    <div class="cover-card">
+      <div class="cover-card-icon">👥</div>
+      <div class="cover-card-label">CAPACITY</div>
+      <div class="cover-card-val"
+        data-ar="350 مشارك<br><span style='font-size:10px;color:var(--text-dim);'>بحد أقصى</span>"
+        data-en="350 Participants<br><span style='font-size:10px;color:var(--text-dim);'>Maximum</span>"
+        data-fr="350 Participants<br><span style='font-size:10px;color:var(--text-dim);'>Maximum</span>"
+      >350 مشارك<br><span style="font-size:10px;color:var(--text-dim);">بحد أقصى</span></div>
+    </div>
+  </div>
+
+  <div class="cover-bottom">NEXUS 4.0 &nbsp;|&nbsp; UNIVERSITÉ BLIDA &nbsp;|&nbsp; 2026 &nbsp;|&nbsp; DOCUMENT OFFICIEL</div>
+  <div class="cover-footer-bar"></div>
+</div>
+
+<!-- ══════════════ CONTENT ══════════════ -->
+<div class="content">
+
+  <!-- ─── S1: OVERVIEW ─── -->
+  <div class="sec-head">
+    <div class="sec-num">01</div>
+    <div class="sec-titles">
+      <h2 data-ar="نظرة عامة على الفعالية" data-en="Event Overview" data-fr="Aperçu de l'Événement">نظرة عامة على الفعالية</h2>
+      <div class="en" data-ar="نظرة عامة" data-en="EVENT OVERVIEW" data-fr="APERÇU GÉNÉRAL">EVENT OVERVIEW</div>
+    </div>
+    <div class="sec-line"></div>
+  </div>
+
+  <div class="stat-row">
+    <div class="stat-box">
+      <div class="stat-num">350</div>
+      <div class="stat-label" data-ar="إجمالي المشاركين" data-en="Total Participants" data-fr="Participants au total">إجمالي المشاركين</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num">3–5</div>
+      <div class="stat-label" data-ar="محاور تنافسية" data-en="Challenge Tracks" data-fr="Axes de Compétition">محاور تنافسية</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num">01</div>
+      <div class="stat-label" data-ar="يوم مكثّف متكامل" data-en="Intensive Full Day" data-fr="Journée Intensive Complète">يوم مكثّف متكامل</div>
+    </div>
+  </div>
+
+  <div class="nature-box">
+    <strong style="color:var(--cyan);font-size:15px;">💡 فكرة المسابقة ومعرض الابتكار:</strong><br>
+    <strong>حدث وطني استثنائي</strong> يُحتضن داخل الجامعة، يجمع بين الطلبة المبتكرين، مسؤولي الدولة، وأقطاب الاقتصاد. يتلخص الحدث في منافسة حية لحل تحديات حقيقية للشركات، حيث ستحظى الفرق الفائزة بفرصة العمل على تطبيق حلولها بالشراكة المباشرة مع الشركة صاحبة التحدي، وذلك بالتوازي مع <strong>معرض شامل (Stands)</strong> يتفاعل فيه الزوار والمستثمرون مباشرة مع ابتكارات النوادي العلمية والمشاريع الناشئة.
+    <br><br>
+    <div style="background:rgba(201,168,76,0.06); border:1px solid rgba(201,168,76,0.2); padding:10px 14px; border-radius:8px;">
+      <strong style="color:var(--gold-l);">💎 فرصة فريدة للشركاء والرعاة:</strong><br>
+      يشهد الحدث حضوراً وازناً وصفة اعتبارية كبرى بفضل الدعوات الرسمية لـ <strong>طاقم وزاري حكومي، مستثمرين بارزين، رؤساء مؤسسات ومدراء شركات كبرى، ونخبة من المؤثرين في التجارة الإلكترونية وريادة الأعمال، وصحفيين وقنوات تلفزيونية.</strong> هذا التجمع يوفر للشركاء أقصى درجات الظهور الإعلامي (Visibility) وفرصاً ذهبية لتموضع العلامة التجارية أمام كبار صناع القرار وشريحة الشباب.
+    </div>
+  </div>
+
+  <div class="nature-box" style="border-right-color:var(--cyan); background:linear-gradient(135deg,rgba(0,212,255,0.05),transparent);">
+    <strong style="color:var(--cyan);">⚙️ آلية المسابقة:</strong><br>
+    <ul style="list-style-type:none; padding-right:10px; margin-top:8px;">
+      <li style="margin-bottom:6px;"><span class="cyan">▸</span> تطرح كل مؤسسة شريكة مشكلة حقيقية أو تحديًا تقنيًا قبل <strong>10 أيام</strong> من الموعد.</li>
+      <li style="margin-bottom:6px;"><span class="cyan">▸</span> يتنافس المشاركون على تقديم حلول مبتكرة وقابلة للتطبيق لتلك التحديات.</li>
+      <li><span class="cyan">▸</span> تُقيّم الحلول الأولية عن بُعد وتُختار <strong>أفضل 10 حلول</strong> لكل مجال للحضور الميداني والمنافسة النهائية.</li>
+    </ul>
+  </div>
+
+  <div class="panel">
+    <div style="font-size:11px;color:var(--cyan);letter-spacing:1.5px;margin-bottom:12px;">ATTENDANCE BREAKDOWN</div>
+    <div class="cap-wrap">
+      <div class="cap-row">
+        <div class="cap-lbl">المشاركون والمنظمون</div>
+        <div class="cap-track"><div class="cap-fill blue" style="width:71%"></div></div>
+        <div class="cap-val">~250</div>
+      </div>
+      <div class="cap-row">
+        <div class="cap-lbl">ضيوف الشرف VIP</div>
+        <div class="cap-track"><div class="cap-fill gold" style="width:29%"></div></div>
+        <div class="cap-val">100</div>
+      </div>
+      <div class="cap-row" style="margin-bottom:0">
+        <div class="cap-lbl">الطاقة الكلية</div>
+        <div class="cap-track"><div class="cap-fill blue" style="width:100%;background:linear-gradient(90deg,var(--gold-d),var(--gold-l))"></div></div>
+        <div class="cap-val">350</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── S2: WHY NEXUS & ROI ─── -->
+  <div class="sec-head">
+    <div class="sec-num">02</div>
+    <div class="sec-titles">
+      <h2 data-ar="لماذا Nexus؟ وعوائد الرعاية" data-en="Why Nexus? &amp; Sponsor ROI" data-fr="Pourquoi Nexus ? &amp; Retour sur Investissement">لماذا Nexus؟ وعوائد الرعاية</h2>
+      <div class="en" data-ar="لماذا Nexus" data-en="WHY NEXUS? &amp; SPONSOR ROI" data-fr="POURQUOI NEXUS ? &amp; ROI">WHY NEXUS? &amp; SPONSOR ROI</div>
+    </div>
+    <div class="sec-line"></div>
+  </div>
+
+  <div class="panel" style="margin-bottom: 20px; border-top: 3px solid var(--cyan)">
+    <p style="font-size: 13px; line-height: 1.8; color: var(--text);">
+      تمثل <strong>Nexus 4.0</strong> نقطة التقاء تاريخية في بيئة الأعمال الجزائرية، حيث لا نكتفي برعاية الأفكار، بل نصنع حلولاً فعلية. بفضل الإرث القوي لثلاث نسخ ناجحة، تجمع المسابقة مئات الطلبة المهندسين والمبتكرين في مكان واحد، مما يكسر كل الحواجز بين القطاع الأكاديمي، والمؤسسي، والحكومي.
+    </p>
+  </div>
+
+  <div class="obj-grid">
+    <div class="obj-item">
+      <div class="obj-icon">🎯</div>
+      <div class="obj-text"><strong>الوصول المباشر للمواهب (Talent Acquisition):</strong> اكتشاف وتوظيف أفضل العقول الهندسية والتقنية الشابة قبل تخرجها وانخراطها في سوق العمل.</div>
+    </div>
+    <div class="obj-item">
+      <div class="obj-icon">🏅</div>
+      <div class="obj-text"><strong>التميز الإعلامي والمؤسسي (Brand Positioning):</strong> إبراز صورة شركتكم كداعم رئيسي للشباب والابتكار التكنولوجي، مع تغطية إعلامية ووطنية واسعة.</div>
+    </div>
+    <div class="obj-item">
+      <div class="obj-icon">💡</div>
+      <div class="obj-text"><strong>حلول ابتكارية منخفضة التكلفة:</strong> الحصول على حلول فعلية وإبداعية لمشاكلكم التقنية والميدانية يقدمها مئات المتنافسين.</div>
+    </div>
+    <div class="obj-item">
+      <div class="obj-icon">🤝</div>
+      <div class="obj-text"><strong>توسيع شبكة العلاقات (Networking):</strong> التشبيك المباشر مع وزراء، مستثمرين، ومدراء شركات أخرى خلال فترة المعرض وحفل الـ VIP.</div>
+    </div>
+    <div class="obj-item">
+      <div class="obj-icon">🌍</div>
+      <div class="obj-text"><strong>المسؤولية المجتمعية (CSR):</strong> تعزيز دوركم الريادي في المسؤولية المجتمعية من خلال دعم التطور الاقتصادي والرقمي في الجزائر.</div>
+    </div>
+    <div class="obj-item">
+      <div class="obj-icon">📈</div>
+      <div class="obj-text"><strong>التسويق المباشر للمنتجات:</strong> مساحة مثالية داخل الجامعة لترويج منتجاتكم وخدماتكم أمام آلاف الطلبة والأساتذة.</div>
+    </div>
+  </div>
+
+  <!-- ─── S3: AUDIENCE ─── -->
+  <div class="sec-head">
+    <div class="sec-num">03</div>
+    <div class="sec-titles">
+      <h2 data-ar="من يشارك في Nexus 4.0؟" data-en="Who Participates in Nexus 4.0?" data-fr="Qui Participe à Nexus 4.0 ?">من يشارك في Nexus 4.0؟</h2>
+      <div class="en" data-ar="الجمهور المستهدف" data-en="TARGET AUDIENCE" data-fr="PUBLIC CIBLE">TARGET AUDIENCE</div>
+    </div>
+    <div class="sec-line"></div>
+  </div>
+
+  <div class="audience-grid">
+    <div class="aud-card">
+      <div class="aud-card-icon">🧑‍💻</div>
+      <div class="aud-card-title" data-ar="فرق حل المشكلات" data-en="Problem-Solving Teams" data-fr="Équipes de Résolution de Problèmes">فرق حل المشكلات</div>
+      <div class="aud-card-desc" data-ar="أي شخص (طلبة، مهنيون، باحثون...) يمكنه المشاركة في فرق لحل تحديات حقيقية مقدمة من الشركات الشريكة" data-en="Anyone (students, professionals, researchers…) can join teams to solve real challenges submitted by partner companies" data-fr="Toute personne (étudiants, professionnels, chercheurs…) peut rejoindre des équipes pour résoudre de vrais défis proposés par les entreprises partenaires">أي شخص (طلبة، مهنيون، باحثون...) يمكنه المشاركة في فرق لحل تحديات حقيقية مقدمة من الشركات الشريكة</div>
+    </div>
+    <div class="aud-card">
+      <div class="aud-card-icon">🏢</div>
+      <div class="aud-card-title" data-ar="أصحاب المشاريع والشركات الناشئة" data-en="Project Owners &amp; Startups" data-fr="Porteurs de Projets &amp; Startups">أصحاب المشاريع والشركات الناشئة</div>
+      <div class="aud-card-desc" data-ar="مشاريع ريادية وشركات ناشئة تعرض أعمالها بأجنحة مخصصة للبحث عن شركاء ومستثمرين وعملاء" data-en="Entrepreneurial projects and startups showcasing their work in dedicated booths, seeking partners, investors, and clients" data-fr="Projets entrepreneuriaux et startups présentant leurs travaux dans des stands dédiés pour trouver partenaires, investisseurs et clients">مشاريع ريادية وشركات ناشئة تعرض أعمالها بأجنحة مخصصة للبحث عن شركاء ومستثمرين وعملاء</div>
+    </div>
+    <div class="aud-card">
+      <div class="aud-card-icon">💰</div>
+      <div class="aud-card-title" data-ar="المستثمرون ورؤساء المؤسسات" data-en="Investors &amp; Corporate Leaders" data-fr="Investisseurs &amp; Chefs d'Entreprise">المستثمرون ورؤساء المؤسسات</div>
+      <div class="aud-card-desc" data-ar="VIP يبحثون عن مواهب وفرص استثمارية واندماجات محتملة مع مشاريع واعدة" data-en="VIPs seeking talent, investment opportunities, and potential partnerships with promising projects" data-fr="VIP à la recherche de talents, d'opportunités d'investissement et de partenariats avec des projets prometteurs">VIP يبحثون عن مواهب وفرص استثمارية واندماجات محتملة مع مشاريع واعدة</div>
+    </div>
+    <div class="aud-card">
+      <div class="aud-card-icon">🏛️</div>
+      <div class="aud-card-title" data-ar="المسؤولون والوزارات" data-en="Officials &amp; Ministries" data-fr="Responsables &amp; Ministères">المسؤولون والوزارات</div>
+      <div class="aud-card-desc" data-ar="ممثلو الجهات الحكومية المعنية بدعم الابتكار وريادة الأعمال والتحول الرقمي" data-en="Government representatives supporting innovation, entrepreneurship, and digital transformation" data-fr="Représentants des institutions gouvernementales soutenant l'innovation, l'entrepreneuriat et la transformation numérique">ممثلو الجهات الحكومية المعنية بدعم الابتكار وريادة الأعمال والتحول الرقمي</div>
+    </div>
+    <div class="aud-card">
+      <div class="aud-card-icon">👨‍🏫</div>
+      <div class="aud-card-title" data-ar="الأكاديميون والمرشدون" data-en="Academics &amp; Mentors" data-fr="Académiciens &amp; Mentors">الأكاديميون والمرشدون</div>
+      <div class="aud-card-desc" data-ar="أساتذة وباحثون وخبراء يُثرون الفعالية بالتوجيه والتحكيم والخبرة التقنية" data-en="Professors, researchers, and experts enriching the event through mentorship, judging, and technical expertise" data-fr="Professeurs, chercheurs et experts enrichissant l'événement par le mentorat, l'évaluation et l'expertise technique">أساتذة وباحثون وخبراء يُثرون الفعالية بالتوجيه والتحكيم والخبرة التقنية</div>
+    </div>
+    <div class="aud-card">
+      <div class="aud-card-icon">📰</div>
+      <div class="aud-card-title" data-ar="الإعلام الوطني" data-en="National Media" data-fr="Médias Nationaux">الإعلام الوطني</div>
+      <div class="aud-card-desc" data-ar="صحفيون ومؤثرون رقميون لتوثيق الفعالية وتسليط الضوء على منجزات الشباب الجزائري" data-en="Journalists and digital influencers documenting the event and spotlighting Algeria's youth achievements" data-fr="Journalistes et influenceurs numériques documentant l'événement et mettant en lumière les réalisations de la jeunesse algérienne">صحفيون ومؤثرون رقميون لتوثيق الفعالية وتسليط الضوء على منجزات الشباب الجزائري</div>
+    </div>
+  </div>
+
+  <div class="panel" style="margin-top:20px; border-top: 3px solid var(--gold); border-right: none; background: linear-gradient(135deg, rgba(201,168,76,0.05), transparent);">
+    <strong style="color:var(--gold-l); font-size:15px;">🌟 أجنحة العرض وضيوف الشرف (VIP):</strong><br>
+    سيتخلل الفعالية <strong>معرض شامل (Stands)</strong> تُنصب فيه أجنحة لعرض ابتكارات النوادي العلمية، حاملي الأفكار، وأصحاب المشاريع الناشئة. وسيحظى المعرض بحضور استثنائي بفضل دعوة رسمية لنخبة من:
+    <div style="display:flex; flex-wrap:wrap; gap:10px; margin-top:12px;">
+      <span class="media-tag" style="background:rgba(201,168,76,0.1);border-color:rgba(201,168,76,0.3);color:var(--gold-l);">🏛️ طاقم وزاري حكومي</span>
+      <span class="media-tag" style="background:rgba(0,212,255,0.1);border-color:rgba(0,212,255,0.3);color:var(--cyan);">💰 مستثمرين محليين</span>
+      <span class="media-tag" style="background:rgba(0,255,157,0.1);border-color:rgba(0,255,157,0.3);color:#00FF9D;">🏢 رؤساء مؤسسات ومدراء شركات</span>
+      <span class="media-tag" style="background:rgba(255,77,109,0.1);border-color:rgba(255,77,109,0.3);color:#FF4D6D;">📱 مؤثرين في مجال التجارة الإلكترونية وريادة الأعمال</span>
+    </div>
+  </div>
+
+
+
+  <!-- ─── S4: TIMELINE ─── -->
+  <div class="sec-head">
+    <div class="sec-num">04</div>
+    <div class="sec-titles">
+      <h2 data-ar="البرنامج الزمني لليوم" data-en="Day Schedule" data-fr="Programme de la Journée">البرنامج الزمني لليوم</h2>
+      <div class="en" data-ar="الجدول الزمني" data-en="EVENT TIMELINE" data-fr="PROGRAMME">EVENT TIMELINE</div>
+    </div>
+    <div class="sec-line"></div>
+  </div>
+
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-time">08:00 — 09:30</div>
+      <div class="tl-body">
+        <div class="tl-icon">🚪</div>
+        <div class="tl-title" data-ar="استقبال الضيوف والمشاركين" data-en="Welcoming Guests &amp; Participants" data-fr="Accueil des Invités et Participants">استقبال الضيوف والمشاركين</div>
+        <div class="tl-desc" data-ar="تسجيل الوصول، توزيع الشارات، توجيه المشاركين نحو أجنحتهم، استقبال الضيوف والـVIP وإرشادهم لأماكنهم المخصصة" data-en="Check-in, badge distribution, guiding participants to their booths, welcoming VIP guests to their reserved seats" data-fr="Enregistrement, distribution des badges, orientation des participants vers leurs stands, accueil des VIP à leurs places réservées">تسجيل الوصول، توزيع الشارات، توجيه المشاركين نحو أجنحتهم، استقبال الضيوف والـVIP وإرشادهم لأماكنهم المخصصة</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="border-color:var(--cyan);box-shadow:0 0 8px rgba(0,212,255,0.4)"></div>
+      <div class="tl-time" style="color:var(--gold-l);border-color:var(--border-g);background:rgba(201,168,76,0.05)">09:30 — 10:15</div>
+      <div class="tl-body" style="border-right:2px solid var(--gold)">
+        <div class="tl-icon">🎤</div>
+        <div class="tl-title" style="color:var(--gold-l)" data-ar="حفل الافتتاح الرسمي" data-en="Official Opening Ceremony" data-fr="Cérémonie d'Ouverture Officielle">حفل الافتتاح الرسمي</div>
+        <div class="tl-desc" data-ar="كلمات ترحيبية، عروض تقديمية لأحدث التقنيات والأفكار المبتكرة، إطلاق رسمي لـ Nexus 4.0 بحضور الشخصيات الرسمية" data-en="Welcome speeches, presentations of the latest technologies and innovative ideas, official launch of Nexus 4.0 with VIP guests" data-fr="Discours de bienvenue, présentations des dernières technologies et idées innovantes, lancement officiel de Nexus 4.0 en présence des personnalités officielles">كلمات ترحيبية، عروض تقديمية لأحدث التقنيات والأفكار المبتكرة، إطلاق رسمي لـ Nexus 4.0 بحضور الشخصيات الرسمية</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-time">10:30 — 12:30</div>
+      <div class="tl-body">
+        <div class="tl-icon">🏪</div>
+        <div class="tl-title" data-ar="جلسة العرض الأولى — الأجنحة + البيتشينج" data-en="Session 1 — Booths + Pitching" data-fr="Session 1 — Stands + Pitching">جلسة العرض الأولى — الأجنحة + البيتشينج</div>
+        <div class="tl-desc" data-ar="فتح أجنحة المشاريع الناشئة للعموم؛ بالتوازي يبدأ أفضل 10 فرق في كل محور تنافسي تقديم عروضهم أمام لجنة التحكيم" data-en="Opening startup booths to the public; simultaneously, the top 10 teams per track pitch their solutions to the judging panel" data-fr="Ouverture des stands de startups au public ; simultanément, les 10 meilleures équipes par axe présentent leurs solutions au jury">فتح أجنحة المشاريع الناشئة للعموم؛ بالتوازي يبدأ أفضل 10 فرق في كل محور تنافسي تقديم عروضهم أمام لجنة التحكيم</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="border-color:var(--green);box-shadow:0 0 8px rgba(0,255,157,0.3)"></div>
+      <div class="tl-time" style="color:var(--green);border-color:rgba(0,255,157,0.2);background:rgba(0,255,157,0.04)">12:30 — 13:30</div>
+      <div class="tl-body" style="border-right:2px solid var(--green)">
+        <div class="tl-icon">🍽️</div>
+        <div class="tl-title" style="color:#34a304" data-ar="استراحة الغداء والتواصل" data-en="Lunch Break &amp; Networking" data-fr="Pause Déjeuner &amp; Networking">استراحة الغداء والتواصل</div>
+        <div class="tl-desc" data-ar="وجبة غداء للمشاركين، وجبة مميزة لضيوف الشرف — فرصة ذهبية للتواصل غير الرسمي بين الطلبة والمستثمرين والشركات" data-en="Lunch for participants, a special meal for VIP guests — a golden opportunity for informal networking between students, investors, and companies" data-fr="Déjeuner pour les participants, repas VIP spécial — une opportunité en or pour le networking informel entre étudiants, investisseurs et entreprises">وجبة غداء للمشاركين، وجبة مميزة لضيوف الشرف — فرصة ذهبية للتواصل غير الرسمي بين الطلبة والمستثمرين والشركات</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-time">13:30 — 16:00</div>
+      <div class="tl-body">
+        <div class="tl-icon">⚡</div>
+        <div class="tl-title" data-ar="جلسة العرض الثانية — استمرار الأجنحة والتقييم" data-en="Session 2 — Continued Booths &amp; Evaluation" data-fr="Session 2 — Stands Continus &amp; Évaluation">جلسة العرض الثانية — استمرار الأجنحة والتقييم</div>
+        <div class="tl-desc" data-ar="استئناف جلسات البيتشينج مع اللجنة، الأجنحة مفتوحة للزوار والمستثمرين، التفاوض المباشر بين أصحاب المشاريع والشركاء المحتملين" data-en="Resuming pitching sessions with the jury, booths open to visitors and investors, direct negotiations between project owners and potential partners" data-fr="Reprise des sessions de pitching avec le jury, stands ouverts aux visiteurs et investisseurs, négociations directes entre porteurs de projets et partenaires potentiels">استئناف جلسات البيتشينج مع اللجنة، الأجنحة مفتوحة للزوار والمستثمرين، التفاوض المباشر بين أصحاب المشاريع والشركاء المحتملين</div>
+      </div>
+    </div>
+    <div class="tl-item" style="margin-bottom:0">
+      <div class="tl-dot" style="border-color:var(--gold);box-shadow:0 0 12px rgba(201,168,76,0.5)"></div>
+      <div class="tl-time" style="color:var(--gold-l);border-color:var(--border-g);background:rgba(201,168,76,0.05)">16:00 — 17:00</div>
+      <div class="tl-body" style="border-right:2px solid var(--gold)">
+        <div class="tl-icon">🏆</div>
+        <div class="tl-title" style="color:var(--gold-l)" data-ar="حفل التكريم والإعلان عن الفائزين" data-en="Awards Ceremony &amp; Winners Announcement" data-fr="Cérémonie de Remise des Prix &amp; Annonce des Lauréats">حفل التكريم والإعلان عن الفائزين</div>
+        <div class="tl-desc" data-ar="إعلان النتائج النهائية، توزيع الجوائز المالية والكؤوس، منح Label للمشاريع المؤهلة، كلمة ختامية وتصوير جماعي رسمي" data-en="Final results announcement, distribution of cash prizes and trophies, granting Labels to eligible projects, closing speech and official group photo" data-fr="Annonce des résultats finaux, remise des prix en espèces et trophées, attribution de Labels aux projets qualifiés, discours de clôture et photo de groupe officielle">إعلان النتائج النهائية، توزيع الجوائز المالية والكؤوس، منح Label للمشاريع المؤهلة، كلمة ختامية وتصوير جماعي رسمي</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── S5: CHALLENGE THEMES ─── -->
+  <div class="sec-head">
+    <div class="sec-num">05</div>
+    <div class="sec-titles">
+      <h2 data-ar="مجالات التحديات التنافسية" data-en="Competitive Challenge Areas" data-fr="Domaines des Défis Compétitifs">مجالات التحديات التنافسية</h2>
+      <div class="en" data-ar="مجالات التحديات" data-en="CHALLENGE AREAS" data-fr="DOMAINES DE DÉFIS">CHALLENGE AREAS</div>
+    </div>
+    <div class="sec-line"></div>
+  </div>
+
+
+  <div class="themes-grid" style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px;">
+    <div class="theme-card" style="grid-column: span 2;">
+      <div class="theme-icon">🏭</div>
+      <div class="theme-name" data-ar="الصناعة" data-en="Industry" data-fr="Industrie">الصناعة</div>
+      <div class="theme-desc" style="margin-top:6px;font-size:11px;"><strong style="color:var(--gold-l);" data-ar="متاح للرعاية" data-en="Available for Sponsorship" data-fr="Disponible au Parrainage">متاح للرعاية</strong></div>
+    </div>
+    <div class="theme-card" style="grid-column: span 2;">
+      <div class="theme-icon">🌾</div>
+      <div class="theme-name" data-ar="الزراعة" data-en="Agriculture" data-fr="Agriculture">الزراعة</div>
+      <div class="theme-desc" style="margin-top:6px;font-size:11px;"><strong style="color:var(--gold-l);" data-ar="متاح للرعاية" data-en="Available for Sponsorship" data-fr="Disponible au Parrainage">متاح للرعاية</strong></div>
+    </div>
+    <div class="theme-card" style="border-top-color:var(--cyan); grid-column: span 2;">
+      <div class="theme-icon">🔒</div>
+      <div class="theme-name" data-ar="أمن الشبكات" data-en="Network Security" data-fr="Sécurité des Réseaux">أمن الشبكات</div>
+      <div class="theme-desc" style="margin-top:6px;font-size:11px;"><strong style="color:var(--gold-l);" data-ar="متاح للرعاية" data-en="Available for Sponsorship" data-fr="Disponible au Parrainage">متاح للرعاية</strong></div>
+    </div>
+    <div class="theme-card" style="border: 1px dashed var(--border-g); border-top: 2px dashed var(--gold); background: rgba(201,168,76,0.02); grid-column: span 3;">
+      <div class="theme-icon">✨</div>
+      <div class="theme-name" data-ar="محور اختياري" data-en="Optional Track" data-fr="Axe Optionnel">محور اختياري</div>
+      <div class="theme-desc" style="margin-top:6px;font-size:11px;"><strong style="color:var(--gold-l);" data-ar="يمكن للراعي الذهبي اقتراح تحدي خاص" data-en="The Gold Sponsor may propose a custom challenge" data-fr="Le Sponsor Or peut proposer un défi personnalisé">يمكن للراعي الذهبي اقتراح تحدي خاص</strong></div>
+    </div>
+    <div class="theme-card" style="border: 1px dashed var(--border-g); border-top: 2px dashed var(--gold); background: rgba(201,168,76,0.02); grid-column: span 3;">
+      <div class="theme-icon">✨</div>
+      <div class="theme-name" data-ar="محور اختياري" data-en="Optional Track" data-fr="Axe Optionnel">محور اختياري</div>
+      <div class="theme-desc" style="margin-top:6px;font-size:11px;"><strong style="color:var(--gold-l);" data-ar="يمكن للراعي الذهبي اقتراح تحدي خاص" data-en="The Gold Sponsor may propose a custom challenge" data-fr="Le Sponsor Or peut proposer un défi personnalisé">يمكن للراعي الذهبي اقتراح تحدي خاص</strong></div>
+    </div>
+  </div>
+
+
+
+  <div class="media-box">
+    <strong style="color:var(--gold-l);">📡 التغطية الإعلامية والوصول الرقمي:</strong><br>
+    تحظى الفعالية بحملة ترويجية مشتركة وواسعة النطاق. <strong>سيتم وضع شعارات الشركات الراعية (Logos) بشكل بارز</strong> مكافأةً لهم على المساعدة في تنظيم ودعم الحدث. سيتم الترويج عبر:<br>
+    <ul style="margin-top:6px; padding-right:16px;">
+      <li>📱 <strong>إنستغرام وفيسبوك:</strong> نشر مركّز على صفحات النادي العلمي المنظم والصفحات الرسمية للجامعة، مما يضمن وصولاً مباشراً لآلاف الطلبة والمهتمين.</li>
+      <li>📺 <strong>تغطية رسمية:</strong> حضور صحفيين من وسائل الإعلام وتوثيق من قِبل خلايا الإعلام الجامعية.</li>
+    </ul>
+    <div class="media-tags">
+      <span class="media-tag">📸 Instagram (Club & Uni)</span>
+      <span class="media-tag">👥 Facebook (Club & Uni)</span>
+      <span class="media-tag gold-tag">🎓 إعلام الجامعة</span>
+      <span class="media-tag gold-tag">✨ Logo Placement</span>
+    </div>
+  </div>
+
+
+
+  <!-- ─── S6: BUDGET ─── -->
+  <div class="sec-head">
+    <div class="sec-num">06</div>
+    <div class="sec-titles">
+      <h2 data-ar="الميزانية التقديرية" data-en="Estimated Budget" data-fr="Budget Estimatif">الميزانية التقديرية</h2>
+      <div class="en" data-ar="الميزانية" data-en="ESTIMATED BUDGET" data-fr="BUDGET ESTIMATIF">ESTIMATED BUDGET</div>
+    </div>
+    <div class="sec-line"></div>
+  </div>
+
+  <table class="budget-table">
+    <thead>
+      <tr>
+        <th>البند</th>
+        <th>التفاصيل</th>
+        <th style="text-align:left;min-width:160px">التكلفة التقديرية</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>🍔 إطعام المشاركين والمنظمين</strong></td>
+        <td>~250 شخص × ساندويش/برغر + ماء</td>
+        <td><span class="amt">700 دج/شخص</span><br><small class="dim">~175,000 دج</small></td>
+      </tr>
+      <tr>
+        <td><strong>🥗 إطعام ضيوف الشرف</strong></td>
+        <td>حتى 100 شخص — لجنة التقييم، وزراء، مستثمرون — وجبة مميزة</td>
+        <td><span class="amt-tbd">يُحدَّد مع المورد</span></td>
+      </tr>
+      <tr>
+        <td><strong>🏆 الجوائز المالية</strong></td>
+        <td>70,000 دج للفريق الفائز في كل محور × 3 إلى 5 محاور<br><small class="dim">+ 50,000 دج لأفضل مشروع + 50,000 دج لأفضل جناح عرض</small></td>
+        <td><span class="amt">310,000 – 450,000 دج</span></td>
+      </tr>
+      <tr>
+        <td><strong>🥇 الكؤوس والدروع</strong></td>
+        <td>تخصيص إجمالي للتكريمات والميداليات</td>
+        <td><span class="amt">40,000 دج</span></td>
+      </tr>
+      <tr>
+        <td><strong>🖨️ الطباعة والهوية البصرية</strong></td>
+        <td>شارات + أحزمة لـ400 شخص، خلفية المسرح، لافتات Roll-up</td>
+        <td><span class="amt-tbd">يُحدَّد مع المورد</span></td>
+      </tr>
+      <tr>
+        <td><strong>⛺ الخيام والأجنحة</strong></td>
+        <td>خيام بيضاء للمعرض الخارجي، طاولات، كراسي إضافية</td>
+        <td><span class="amt-tbd">يُحدَّد مع المورد</span></td>
+      </tr>
+
+      <tr>
+        <td><strong>📱 الإعلان الرقمي</strong></td>
+        <td>حملات Instagram Ads + Facebook Ads</td>
+        <td><span class="amt-tbd">يُحدَّد حسب الميزانية</span></td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="2">+ هامش احتياطي 15% يُضاف على المجموع النهائي لتغطية المصاريف الطارئة</td>
+        <td style="color:var(--gold-l)">تلقائي</td>
+      </tr>
+    </tfoot>
+  </table>
+
+  <div class="contingency">
+    ⚠️ <strong class="gold">ملاحظة:</strong> الأرقام الواردة تقديرية أولية. سيُضاف <strong>هامش احتياط 15%</strong> على المجموع النهائي. ستُحدَّد الأسعار الدقيقة بالتنسيق مع الموردين المحليين قبل اعتماد الميزانية النهائية.
+  </div>
+
+  <!-- ─── S7: COMPANY BENEFITS ─── -->
+  <div class="sec-head">
+    <div class="sec-num">07</div>
+    <div class="sec-titles">
+      <h2 data-ar="فوائد الشركات المُقدِّمة للتحديات" data-en="Benefits for Challenge Providers" data-fr="Avantages pour les Entreprises Proposant des Défis">فوائد الشركات المُقدِّمة للتحديات</h2>
+      <div class="en" data-ar="الفوائد" data-en="BENEFITS FOR CHALLENGE PROVIDERS" data-fr="AVANTAGES POUR LES ENTREPRISES">BENEFITS FOR CHALLENGE PROVIDERS</div>
+    </div>
+    <div class="sec-line"></div>
+  </div>
+
+  <div class="panel mb-4" style="font-size:13px;line-height:1.9;border-right:2px solid var(--green)">
+    الشركات التي تُقدِّم تحدياتها الحقيقية كمحاور تنافسية في <strong class="gold">Nexus 4.0</strong> تستفيد من منظومة متكاملة من الامتيازات:
+  </div>
+
+  <div class="benefits-grid">
+    <div class="benefit-card">
+      <div class="benefit-icon-box">💡</div>
+      <div>
+        <div class="benefit-title" data-ar="حلول لمشاكل حقيقية" data-en="Solutions to Real Problems" data-fr="Solutions à des Problèmes Réels">حلول لمشاكل حقيقية</div>
+        <div class="benefit-desc" data-ar="أذكى المشاركين يعملون على تحدياتكم التشغيلية الفعلية ويقدمون حلولاً مبتكرة" data-en="The brightest participants work on your real operational challenges and deliver innovative solutions" data-fr="Les participants les plus brillants travaillent sur vos défis opérationnels réels et proposent des solutions innovantes">أذكى المشاركين يعملون على تحدياتكم التشغيلية الفعلية ويقدمون حلولاً مبتكرة</div>
+      </div>
+    </div>
+    <div class="benefit-card">
+      <div class="benefit-icon-box">🎯</div>
+      <div>
+        <div class="benefit-title" data-ar="وصول مباشر لأفضل المواهب" data-en="Direct Access to Top Talent" data-fr="Accès Direct aux Meilleurs Talents">وصول مباشر لأفضل المواهب</div>
+        <div class="benefit-desc" data-ar="تعرف مباشر على الكفاءات الجاهزة للتوظيف أو التعاون البحثي مع اختبار فعلي لمهاراتهم" data-en="Direct acquaintance with talents ready for employment or research collaboration, with an actual skills test" data-fr="Contact direct avec des talents prêts à l'emploi ou à la collaboration de recherche, avec un test de compétences réel">تعرف مباشر على الكفاءات الجاهزة للتوظيف أو التعاون البحثي مع اختبار فعلي لمهاراتهم</div>
+      </div>
+    </div>
+    <div class="benefit-card">
+      <div class="benefit-icon-box">🏅</div>
+      <div>
+        <div class="benefit-title" data-ar="صورة مؤسسية إيجابية" data-en="Positive Corporate Image" data-fr="Image Corporative Positive">صورة مؤسسية إيجابية</div>
+        <div class="benefit-desc" data-ar="تضعكم في موقع الشركة الداعمة للابتكار والشباب مع حضور إعلامي وطني مدعوم برعاية رسمية" data-en="Positions you as an innovation-supporting company with national media coverage backed by official sponsorship" data-fr="Vous positionne comme une entreprise soutenant l'innovation avec une couverture médiatique nationale soutenue par un parrainage officiel">تضعكم في موقع الشركة الداعمة للابتكار والشباب مع حضور إعلامي وطني مدعوم برعاية رسمية</div>
+      </div>
+    </div>
+    <div class="benefit-card">
+      <div class="benefit-icon-box">🤝</div>
+      <div>
+        <div class="benefit-title" data-ar="أولوية في الشراكة" data-en="Partnership Priority" data-fr="Priorité de Partenariat">أولوية في الشراكة</div>
+        <div class="benefit-desc" data-ar="صلاحية التفاوض الأول مع الفرق الفائزة للتعاون أو التربص أو الاستثمار في مشاريعهم" data-en="First negotiation rights with winning teams for collaboration, internships, or investment in their projects" data-fr="Droits de première négociation avec les équipes gagnantes pour la collaboration, les stages ou l'investissement dans leurs projets">صلاحية التفاوض الأول مع الفرق الفائزة للتعاون أو التربص أو الاستثمار في مشاريعهم</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Winner Outcomes -->
+  <div class="panel mt-4" style="border-right:2px solid var(--gold);font-size:13px;line-height:1.9;">
+    <strong class="gold" style="font-size:15px;">🏆 التقييم والتتويج</strong><br>
+    <ul style="list-style-type:none; margin-top:8px; padding-right:10px;">
+      <li style="margin-bottom:6px;"><span class="gold">▸</span> اختيار فريق فائز واحد عن كل مجال من مجالات تحديات الشركات.</li>
+      <li style="margin-bottom:6px;"><span class="gold">▸</span> اختيار <strong>"أفضل جناح عرض"</strong> بناءً على تصويت الزوار وتقييم لجنة التحكيم.</li>
+      <li style="margin-bottom:6px;"><span class="gold">▸</span> منح جوائز تحفيزية للفائزين.</li>
+      <li><span class="gold">▸</span> منح الفريق الفائز فرصة تطوير فكرته ميدانيًا بالتعاون مع المؤسسة الشريكة.</li>
+    </ul>
+  </div>
+
+
+  <!-- ─── S8: SPONSORSHIP ─── -->
+  <div class="sec-head">
+    <div class="sec-num">08</div>
+    <div class="sec-titles">
+      <h2 data-ar="فرص الرعاية والشراكة" data-en="Sponsorship &amp; Partnership Opportunities" data-fr="Opportunités de Parrainage et de Partenariat">فرص الرعاية والشراكة</h2>
+      <div class="en" data-ar="مستويات الرعاية" data-en="SPONSORSHIP TIERS" data-fr="NIVEAUX DE PARRAINAGE">SPONSORSHIP TIERS</div>
+    </div>
+    <div class="sec-line"></div>
+  </div>
+
+  <div class="sponsorship-block">
+
+  <div style="font-size:13px;line-height:1.9;margin-bottom:24px;color:var(--text-dim)">
+    بما أن هذا الحدث <strong>جامعي بامتياز</strong>، فهو يمثل فرصة نادرة لبناء العلامة التجارية لجهة العمل (Employer Branding). ندعو القطاع الاقتصادي للاستثمار في الجيل القادم من المبتكرين عبر 3 مستويات رعاية تُحقق المردود الفعلي:
+  </div>
+
+  <!-- GOLD -->
+  <div class="sponsor-card gold">
+    <div class="sp-head">
+      <div class="sp-medal">🥇</div>
+      <div class="sp-title">
+        <h3 data-ar="الراعي الذهبي — الشريك الرسمي" data-en="Gold Sponsor — Official Partner" data-fr="Sponsor Or — Partenaire Officiel">الراعي الذهبي — الشريك الرسمي</h3>
+        <div class="sub" data-ar="الراعي الذهبي" data-en="GOLD SPONSOR — OFFICIAL PARTNER" data-fr="SPONSOR OR — PARTENAIRE OFFICIEL">GOLD SPONSOR — OFFICIAL PARTNER</div>
+      </div>
+    </div>
+    <div class="sp-body">
+      <div class="sp-benefits">
+        <div class="sp-benefit"><span class="sp-bi">🏷️</span><span>تسمية أحد المحاور التنافسية باسم الشركة لتحدي الطلبة مباشرة</span></div>
+        <div class="sp-benefit"><span class="sp-bi">⚖️</span><span>منح الشركة مقعداً في لجنة التحكيم لاختيار أفضل الحلول</span></div>
+        <div class="sp-benefit"><span class="sp-bi">📢</span><span>تصدّر لوغو الشركة كراعٍ رسمي في صفحات الفيسبوك والإنستغرام للجامعة والنادي</span></div>
+        <div class="sp-benefit"><span class="sp-bi">📑</span><span>الحصول على قاعدة السير الذاتية (CVs) لجميع المشاركين لأغراض التوظيف</span></div>
+        <div class="sp-benefit"><span class="sp-bi">📛</span><span>طباعة شعار الشركة منفرداً على شارات وأحزمة المشاركين (Badges)</span></div>
+        <div class="sp-benefit"><span class="sp-bi">🏢</span><span>جناح عرض VIP في وسط معرض الطلبة للتفاعل مع الزوار والـ VIP</span></div>
+        <div class="sp-benefit"><span class="sp-bi">🎤</span><span>الخطاب الافتتاحي وتكريم الفائزين على منصة الجامعة الرسمية</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SILVER -->
+  <div class="sponsor-card silver">
+    <div class="sp-head">
+      <div class="sp-medal">🥈</div>
+      <div class="sp-title">
+        <h3 data-ar="الراعي الفضي — شريك الدعم" data-en="Silver Sponsor — Support Partner" data-fr="Sponsor Argent — Partenaire de Soutien">الراعي الفضي — شريك الدعم</h3>
+        <div class="sub" data-ar="الراعي الفضي" data-en="SILVER SPONSOR — SUPPORT PARTNER" data-fr="SPONSOR ARGENT — PARTENAIRE DE SOUTIEN">SILVER SPONSOR — SUPPORT PARTNER</div>
+      </div>
+    </div>
+    <div class="sp-body">
+      <div class="sp-benefits">
+        <div class="sp-benefit"><span class="sp-bi">🏪</span><span>جناح عرض قياسي داخل بهو الجامعة للتسويق المباشر لخدماتكم</span></div>
+        <div class="sp-benefit"><span class="sp-bi">🖼️</span><span>ظهور لوغو الشركة بشكل بارز في المنشورات المشتركة للنوادي العلمية</span></div>
+        <div class="sp-benefit"><span class="sp-bi">📺</span><span>عرض فيديو إعلاني ترويجي للشركة على الشاشات خلال فترات الاستراحة</span></div>
+        <div class="sp-benefit"><span class="sp-bi">📦</span><span>فرصة توزيع عينات مجانية (Sampling) أو منشورات للمئات من الطلبة</span></div>
+        <div class="sp-benefit"><span class="sp-bi">📣</span><span>إشادة رسمية بالشركة الداعمة للشباب الجامعي أثناء حفل الافتتاح</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BRONZE -->
+  <div class="sponsor-card bronze">
+    <div class="sp-head">
+      <div class="sp-medal">🥉</div>
+      <div class="sp-title">
+        <h3 data-ar="الراعي البرونزي — شريك الخدمات" data-en="Bronze Sponsor — Logistics Partner" data-fr="Sponsor Bronze — Partenaire Logistique">الراعي البرونزي — شريك الخدمات</h3>
+        <div class="sub" data-ar="الراعي البرونزي" data-en="BRONZE SPONSOR — LOGISTICS PARTNER" data-fr="SPONSOR BRONZE — PARTENAIRE LOGISTIQUE">BRONZE SPONSOR — LOGISTICS PARTNER</div>
+      </div>
+    </div>
+    <div class="sp-body">
+      <div class="sp-benefits">
+
+        <div class="sp-benefit"><span class="sp-bi">🌐</span><span>وضع الشعار على الموقع الرسمي للفعالية وجميع المواد الطباعية</span></div>
+        <div class="sp-benefit"><span class="sp-bi">📱</span><span>منشورات "شكر وتقدير" على جميع حسابات الجامعة والطلبة</span></div>
+        <div class="sp-benefit"><span class="sp-bi">🎙️</span><span>اعتراف شفهي خلال الافتتاح بوصفكم من مكّن انعقاد الفعالية</span></div>
+      </div>
+    </div>
+  </div>
+  <!-- Sponsorship Comparison Table -->
+  <div class="panel mt-4" style="border-top:2px solid var(--gold);">
+    <strong class="gold" style="font-size:15px;"
+      data-ar="📊 مقارنة مستويات الرعاية"
+      data-en="📊 Sponsorship Tiers Comparison"
+      data-fr="📊 Comparaison des Niveaux de Parrainage"
+    >📊 مقارنة مستويات الرعاية</strong>
+    <div style="overflow-x:auto; margin-top:14px;">
+    <table class="org-table" style="min-width:600px;">
+      <thead>
+        <tr>
+          <th data-ar="الامتياز" data-en="Benefit" data-fr="Avantage">الامتياز</th>
+          <th style="text-align:center;color:var(--gold-l)">🥇</th>
+          <th style="text-align:center;color:var(--silver)">🥈</th>
+          <th style="text-align:center;color:#D4956A">🥉</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td data-ar="تسمية محور تنافسي باسم الشركة" data-en="Named challenge track" data-fr="Axe de compétition nommé">تسمية محور تنافسي باسم الشركة</td>
+          <td style="text-align:center;color:var(--green);font-size:18px">✅</td>
+          <td style="text-align:center;color:var(--text-dim)">—</td>
+          <td style="text-align:center;color:var(--text-dim)">—</td>
+        </tr>
+        <tr>
+          <td data-ar="مقعد في لجنة التحكيم" data-en="Jury seat" data-fr="Siège au jury">مقعد في لجنة التحكيم</td>
+          <td style="text-align:center;color:var(--green);font-size:18px">✅</td>
+          <td style="text-align:center;color:var(--text-dim)">—</td>
+          <td style="text-align:center;color:var(--text-dim)">—</td>
+        </tr>
+        <tr>
+          <td data-ar="الشعار على شارات المشاركين" data-en="Logo on participant badges" data-fr="Logo sur les badges">الشعار على شارات المشاركين</td>
+          <td style="text-align:center;color:var(--gold-l);font-weight:700" data-ar="كبير" data-en="Large" data-fr="Grand">كبير</td>
+          <td style="text-align:center;color:var(--cyan)" data-ar="متوسط" data-en="Medium" data-fr="Moyen">متوسط</td>
+          <td style="text-align:center;color:#D4956A" data-ar="صغير" data-en="Small" data-fr="Petit">صغير</td>
+        </tr>
+        <tr>
+          <td data-ar="قاعدة السير الذاتية (CVs)" data-en="CV database access" data-fr="Accès base de CVs">قاعدة السير الذاتية (CVs)</td>
+          <td style="text-align:center;color:var(--green);font-size:18px">✅</td>
+          <td style="text-align:center;color:var(--text-dim)">—</td>
+          <td style="text-align:center;color:var(--text-dim)">—</td>
+        </tr>
+        <tr>
+          <td data-ar="جناح عرض" data-en="Exhibition booth" data-fr="Stand d'exposition">جناح عرض</td>
+          <td style="text-align:center;color:var(--gold-l);font-weight:700">VIP</td>
+          <td style="text-align:center;color:var(--cyan)" data-ar="قياسي" data-en="Standard" data-fr="Standard">قياسي</td>
+          <td style="text-align:center;color:var(--text-dim)">—</td>
+        </tr>
+        <tr>
+          <td data-ar="خطاب على المنصة" data-en="Stage speech" data-fr="Discours sur scène">خطاب على المنصة</td>
+          <td style="text-align:center;color:var(--green);font-size:18px">✅</td>
+          <td style="text-align:center;color:var(--cyan)" data-ar="إشادة" data-en="Mention" data-fr="Mention">إشادة</td>
+          <td style="text-align:center;color:var(--text-dim)" data-ar="إشادة" data-en="Mention" data-fr="Mention">إشادة</td>
+        </tr>
+        <tr>
+          <td data-ar="فيديو ترويجي على الشاشات" data-en="Promo video on screens" data-fr="Vidéo promo sur écrans">فيديو ترويجي على الشاشات</td>
+          <td style="text-align:center;color:var(--green);font-size:18px">✅</td>
+          <td style="text-align:center;color:var(--green);font-size:18px">✅</td>
+          <td style="text-align:center;color:var(--text-dim)">—</td>
+        </tr>
+        <tr>
+          <td data-ar="الشعار على المواد الطباعية" data-en="Logo on printed materials" data-fr="Logo sur supports imprimés">الشعار على المواد الطباعية</td>
+          <td style="text-align:center;color:var(--green);font-size:18px">✅</td>
+          <td style="text-align:center;color:var(--green);font-size:18px">✅</td>
+          <td style="text-align:center;color:var(--green);font-size:18px">✅</td>
+        </tr>
+        <tr>
+          <td data-ar="منشورات على وسائل التواصل الاجتماعي" data-en="Social media posts" data-fr="Publications réseaux sociaux">منشورات على وسائل التواصل الاجتماعي</td>
+          <td style="text-align:center;color:var(--gold-l);font-weight:700" data-ar="تصدّر" data-en="Top billing" data-fr="Première place">تصدّر</td>
+          <td style="text-align:center;color:var(--cyan)" data-ar="بارز" data-en="Featured" data-fr="En vedette">بارز</td>
+          <td style="text-align:center;color:var(--text-dim)" data-ar="شكر" data-en="Thank-you" data-fr="Remerciement">شكر</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+
+  <!-- Urgency Banner -->
+  <div class="panel mt-4" style="border:2px solid var(--gold); background:linear-gradient(135deg, rgba(201,168,76,0.08), rgba(0,212,255,0.04)); text-align:center; padding:28px 22px;">
+    <div style="font-size:28px; margin-bottom:10px;">⏰</div>
+    <strong style="font-size:16px; color:var(--gold-l);"
+      data-ar="آخر أجل لتأكيد الرعاية: 15 أوت 2026"
+      data-en="Sponsorship Confirmation Deadline: August 15, 2026"
+      data-fr="Date Limite de Confirmation du Parrainage : 15 Août 2026"
+    >آخر أجل لتأكيد الرعاية: 15 أوت 2026</strong>
+    <div style="margin-top:10px; font-size:12.5px; color:var(--text-dim);"
+      data-ar="🥇 مقعد واحد فقط للراعي الذهبي — الأسبقية لأول شريك يُؤكّد"
+      data-en="🥇 Only 1 Gold Sponsor slot available — First come, first served"
+      data-fr="🥇 Une seule place de Sponsor Or disponible — Premier arrivé, premier servi"
+    >🥇 مقعد واحد فقط للراعي الذهبي — الأسبقية لأول شريك يُؤكّد</div>
+  </div>
+
+  </div><!-- end .sponsorship-block -->
+
+</div><!-- end .content -->
+
+<!-- ══════════════ FOOTER ══════════════ -->
+<div class="doc-footer">
+  <div style="font-size:10px; letter-spacing:2px; color:rgba(255,255,255,0.35); margin-bottom:12px;"
+    data-ar="تحت إشراف"
+    data-en="UNDER THE PATRONAGE OF"
+    data-fr="SOUS LE PATRONAGE DE"
+  >تحت إشراف</div>
+  <h3>NEXUS 4.0</h3>
+  <div class="footer-ar"
+    data-ar="جامعة سعد دحلب — البليدة 1"
+    data-en="Saad Dahlab University — Blida 1"
+    data-fr="Université Saad Dahlab — Blida 1"
+  >جامعة سعد دحلب — البليدة 1</div>
+  <div class="footer-div"></div>
+  <div style="margin-top:16px; display:flex; justify-content:center; gap:30px; flex-wrap:wrap;">
+    <div style="text-align:center;">
+      <div style="font-size:9px; letter-spacing:2px; color:var(--cyan); margin-bottom:4px;"
+        data-ar="البريد الإلكتروني" data-en="EMAIL" data-fr="E-MAIL"
+      >البريد الإلكتروني</div>
+      <div style="font-size:12px; color:rgba(255,255,255,0.7); direction:ltr;">nexus@univ-blida.dz</div>
+    </div>
+    <div style="text-align:center;">
+      <div style="font-size:9px; letter-spacing:2px; color:var(--cyan); margin-bottom:4px;"
+        data-ar="الهاتف" data-en="PHONE" data-fr="TÉLÉPHONE"
+      >الهاتف</div>
+      <div style="font-size:12px; color:rgba(255,255,255,0.7); direction:ltr;">+213 XX XXX XXXX</div>
+    </div>
+  </div>
+  <div class="footer-div" style="margin-top:20px;"></div>
+  <div class="footer-note"
+    data-ar="وثيقة رسمية — سرية ومخصصة للشركاء المحتملين فقط"
+    data-en="Official Document — Confidential, for prospective partners only"
+    data-fr="Document Officiel — Confidentiel, réservé aux partenaires potentiels"
+  >وثيقة رسمية — سرية ومخصصة للشركاء المحتملين فقط</div>
+  <div style="margin-top:8px; font-size:10px; color:rgba(255,255,255,0.2); letter-spacing:2px;">© NEXUS 4.0 — 2026</div>
+</div>
+
+<!-- Theme Toggle Button -->
+<button class="theme-toggle-btn no-print" id="themeToggle" onclick="toggleTheme()" title="تبديل المظهر / Toggle Theme">🌙</button>
+
+<!-- Language Switcher -->
+<div class="lang-switcher no-print" id="langSwitcher">
+  <button class="lang-btn active" id="btn-ar" onclick="setLang('ar')" title="Arabic">AR</button>
+  <button class="lang-btn" id="btn-en" onclick="setLang('en')" title="English">EN</button>
+  <button class="lang-btn" id="btn-fr" onclick="setLang('fr')" title="Français">FR</button>
+</div>
+
+<script>
+/* ── Theme toggle ── */
+function toggleTheme() {
+  const body = document.body;
+  const btn = document.getElementById('themeToggle');
+  body.classList.toggle('light-theme');
+  if (body.classList.contains('light-theme')) {
+    btn.textContent = '🌙';
+    btn.title = 'Switch to Dark Mode';
+    localStorage.setItem('nexus-theme', 'light');
+  } else {
+    btn.textContent = '☀️';
+    btn.title = 'Switch to Light Mode';
+    localStorage.setItem('nexus-theme', 'dark');
+  }
+}
+// Load saved theme — dark is the default
+(function() {
+  const saved = localStorage.getItem('nexus-theme');
+  const btn = document.getElementById('themeToggle');
+  // Default to dark mode
+  if (saved === 'light') {
+    document.body.classList.add('light-theme');
+    btn.textContent = '🌙';
+  } else {
+    document.body.classList.remove('light-theme');
+    btn.textContent = '☀️';
+    localStorage.setItem('nexus-theme', 'dark');
+  }
+})();
+
+/* ── Language switcher ── */
+function setLang(lang) {
+  // Update html dir & lang
+  const root = document.getElementById('htmlRoot');
+  if (lang === 'ar') {
+    root.setAttribute('dir', 'rtl');
+    root.setAttribute('lang', 'ar');
+    document.body.style.direction = 'rtl';
+  } else {
+    root.setAttribute('dir', 'ltr');
+    root.setAttribute('lang', lang);
+    document.body.style.direction = 'ltr';
+  }
+
+  // Swap text of all elements carrying data-[lang] attributes
+  const elements = document.querySelectorAll('[data-ar],[data-en],[data-fr]');
+  elements.forEach(function(el) {
+    const val = el.getAttribute('data-' + lang);
+    if (val !== null) {
+      el.innerHTML = val;
+    }
+  });
+
+  // Update active button
+  ['ar','en','fr'].forEach(function(l) {
+    const b = document.getElementById('btn-' + l);
+    if (b) b.classList.toggle('active', l === lang);
+  });
+
+  localStorage.setItem('nexus-lang', lang);
+}
+
+// Load saved language
+(function() {
+  const savedLang = localStorage.getItem('nexus-lang') || 'ar';
+  if (savedLang !== 'ar') setLang(savedLang);
+})();
+</script>
+
+</body>
+</html>
