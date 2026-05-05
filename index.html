@@ -64,6 +64,11 @@ body > * { position: relative; z-index: 1; }
   /* Full color fidelity */
   * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
 
+  @page {
+    margin: 0;
+    size: A4;
+  }
+
   /* Keep watermark in print */
   body::before {
     position: fixed;
@@ -79,6 +84,7 @@ body > * { position: relative; z-index: 1; }
     min-height: 100vh;
     page-break-after: always;
     break-after: page;
+    padding-top: 60px;
   }
 
   /* ── Every section header starts a NEW page ── */
@@ -86,22 +92,23 @@ body > * { position: relative; z-index: 1; }
     page-break-before: always;
     break-before: page;
     margin-top: 0 !important;
-    padding-top: 10px;
+    padding-top: 30px;
   }
 
-  /* Reduce content wrapper padding for A4 */
-  .content { padding: 24px 32px 16px; }
+  /* Add padding to content for full bleed A4 */
+  .content { padding: 40px 45px 30px; }
 
   /* Sections 03 & 04 share one page — suppress break before 04 */
   .sec-head.no-page-break {
     page-break-before: avoid !important;
     break-before: avoid !important;
     margin-top: 32px !important;
+    padding-top: 10px;
   }
   .sec-head + * { page-break-before: avoid; break-before: avoid; }
   .sec-titles h2 { orphans: 3; widows: 3; }
 
-  /* Keep small components together on one page */
+  /* ========== PREVENT ALL ELEMENTS FROM SPLITTING ========== */
   .stat-box,
   .obj-item,
   .aud-card,
@@ -111,32 +118,46 @@ body > * { position: relative; z-index: 1; }
   .benefit-card,
   .nature-box,
   .contingency,
-  .media-box {
-    page-break-inside: avoid;
-    break-inside: avoid;
+  .media-box,
+  .panel,
+  .stat-row,
+  .obj-grid,
+  .audience-grid,
+  .themes-grid,
+  .tech-req-grid,
+  .benefits-grid,
+  .timeline,
+  .cap-wrap {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
   }
 
-  /* Keep all sponsor cards on one page */
+  /* Keep all sponsor cards together and shrink them to fit A4 */
   .sponsorship-block {
-    page-break-inside: avoid;
-    break-inside: avoid;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    margin-top: 10px;
   }
   .sponsor-card {
-    page-break-inside: avoid;
-    break-inside: avoid;
-    margin-bottom: 8px;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    margin-bottom: 6px !important;
   }
-  /* Compress sponsor cards text/padding for print */
-  .sp-head { padding: 14px 20px !important; }
-  .sp-body { padding: 12px 20px !important; }
-  .sp-medal { font-size: 30px !important; }
-  .sp-title h3 { font-size: 16px !important; }
-  .sp-benefits { gap: 6px !important; }
-  .sp-benefit { font-size: 10.5px !important; line-height: 1.4 !important; }
+  /* Compress sponsor cards aggressively so all 3 fit */
+  .sp-head { padding: 10px 16px !important; gap: 12px !important; }
+  .sp-body { padding: 10px 16px !important; }
+  .sp-medal { font-size: 24px !important; }
+  .sp-title h3 { font-size: 14px !important; }
+  .sp-title .sub { font-size: 8px !important; margin-top: 0px !important; }
+  .sp-benefits { gap: 4px !important; }
+  .sp-benefit { font-size: 9.5px !important; line-height: 1.3 !important; }
+  .sp-bi { font-size: 12px !important; margin-top: 1px !important; }
 
   /* Table rows don't split */
   .org-table tr,
   .budget-table tr { page-break-inside: avoid; break-inside: avoid; }
+  .org-table,
+  .budget-table { page-break-inside: avoid !important; break-inside: avoid !important; }
 
   /* Timeline items stay together */
   .tl-item { page-break-inside: avoid; break-inside: avoid; }
@@ -145,6 +166,7 @@ body > * { position: relative; z-index: 1; }
   .doc-footer {
     page-break-before: always;
     break-before: page;
+    padding: 30px;
   }
 
   /* Remove shadows / blur for print clarity */
@@ -1245,6 +1267,145 @@ body.light-theme .pct-num { color: #1565C0; }
 @media print {
   .theme-toggle-btn, .lang-switcher { display: none !important; }
 }
+
+/* ══════════════════════════════════════════
+   MOBILE RESPONSIVE — Tablets & Phones
+══════════════════════════════════════════ */
+@media screen and (max-width: 768px) {
+  /* Cover */
+  .cover { padding: 40px 20px; min-height: auto; }
+  .nexus-text { font-size: 48px; letter-spacing: -1px; }
+  .version-text { font-size: 20px; letter-spacing: 3px; }
+  .cover-arabic-title { font-size: 18px; }
+  .cover-tagline { font-size: 11px; }
+  .cover-grid { grid-template-columns: 1fr; gap: 10px; max-width: 100%; }
+  .cover-card { padding: 14px 12px; }
+  .cover-label { font-size: 8px; padding: 5px 14px; letter-spacing: 2px; margin-bottom: 24px; }
+  .cover-divider { width: 200px; margin: 24px auto; }
+  .cover-bottom { font-size: 7px; letter-spacing: 1px; bottom: 10px; }
+  .logo-placeholder { width: 60px; height: 60px; top: 16px; right: 16px; }
+  .logo-placeholder span { font-size: 7px; }
+  .logo-placeholder .logo-icon { font-size: 18px; }
+
+  /* Content */
+  .content { padding: 24px 16px 20px; }
+
+  /* Section headers */
+  .sec-head { gap: 10px; margin-bottom: 18px; margin-top: 30px; flex-wrap: wrap; }
+  .sec-num { width: 34px; height: 34px; font-size: 10px; }
+  .sec-titles h2 { font-size: 18px; }
+  .sec-titles .en { font-size: 8px; letter-spacing: 2px; }
+
+  /* Panels */
+  .panel { padding: 16px; }
+
+  /* Stat row */
+  .stat-row { grid-template-columns: 1fr; gap: 10px; }
+  .stat-box { padding: 16px 12px; }
+  .stat-num { font-size: 24px; }
+
+  /* Nature box */
+  .nature-box { padding: 16px; font-size: 12px; }
+
+  /* Capacity bars */
+  .cap-row { flex-wrap: wrap; gap: 8px; }
+  .cap-lbl { width: 100%; text-align: right; font-size: 11px; }
+
+  /* Objectives grid */
+  .obj-grid { grid-template-columns: 1fr; gap: 10px; }
+  .obj-item { padding: 14px; }
+
+  /* Audience grid */
+  .audience-grid { grid-template-columns: 1fr; gap: 10px; }
+
+  /* Timeline */
+  .timeline { padding-right: 24px; }
+  .tl-item { gap: 10px; flex-wrap: wrap; }
+  .tl-time { min-width: auto; font-size: 9px; padding: 5px 10px; }
+  .tl-body { padding: 12px 14px; }
+  .tl-title { font-size: 12px; }
+  .tl-desc { font-size: 11px; }
+  .tl-dot { right: -28px; width: 12px; height: 12px; }
+
+  /* Themes grid */
+  .themes-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .theme-card { padding: 14px 10px; }
+
+  /* Tech requirements */
+  .tech-req-grid { grid-template-columns: 1fr; gap: 8px; }
+  .req-item { padding: 10px 14px; font-size: 11px; }
+
+  /* Media box */
+  .media-box { padding: 14px 16px; font-size: 11.5px; }
+  .media-tags { gap: 6px; }
+  .media-tag { font-size: 10px; padding: 3px 10px; }
+
+  /* Budget table */
+  .budget-table { font-size: 10px; }
+  .budget-table thead th { padding: 10px 10px; font-size: 9px; }
+  .budget-table tbody td { padding: 10px 10px; font-size: 10px; }
+  .budget-table tfoot td { padding: 10px 10px; font-size: 10px; }
+  .amt { font-size: 9px; }
+  .contingency { padding: 12px 14px; font-size: 11px; }
+
+  /* Benefits grid */
+  .benefits-grid { grid-template-columns: 1fr; gap: 10px; }
+  .benefit-card { padding: 14px; }
+
+  /* Sponsor cards */
+  .sp-head { padding: 16px; gap: 12px; flex-wrap: wrap; }
+  .sp-medal { font-size: 32px; }
+  .sp-title h3 { font-size: 16px; }
+  .sp-title .sub { font-size: 8px; letter-spacing: 1px; }
+  .sp-body { padding: 14px 16px; }
+  .sp-benefits { grid-template-columns: 1fr; gap: 8px; }
+  .sp-benefit { font-size: 11px; }
+
+  /* Org table */
+  .org-table thead th { padding: 10px 10px; font-size: 9px; }
+  .org-table tbody td { padding: 10px 10px; font-size: 10px; }
+
+  /* Footer */
+  .doc-footer { padding: 30px 20px; }
+  .doc-footer h3 { font-size: 12px; letter-spacing: 2px; }
+  .footer-ar { font-size: 14px; }
+
+  /* Fixed buttons — stack vertically to avoid overlap */
+  .theme-toggle-btn { width: 42px; height: 42px; font-size: 18px; top: 12px; left: 12px; }
+  .lang-switcher { top: 60px; left: 12px; flex-direction: column; }
+  .lang-btn { height: 30px; padding: 0 10px; font-size: 9px; }
+}
+
+@media screen and (max-width: 480px) {
+  .nexus-text { font-size: 36px; }
+  .version-text { font-size: 16px; }
+  .cover-arabic-title { font-size: 15px; }
+  .cover-tagline { font-size: 10px; }
+  .cover { padding: 30px 14px; }
+
+  .content { padding: 16px 12px 14px; }
+
+  .sec-titles h2 { font-size: 15px; }
+  .stat-num { font-size: 20px; }
+
+  /* Audience stacks to 1 col */
+  .audience-grid { grid-template-columns: 1fr; }
+
+  /* Themes stacks to 1 col */
+  .themes-grid { grid-template-columns: 1fr; }
+
+  /* Budget table horizontal scroll */
+  .budget-table { display: block; overflow-x: auto; white-space: nowrap; }
+
+  /* Org table horizontal scroll */
+  .org-table { display: block; overflow-x: auto; white-space: nowrap; }
+
+  /* Sponsor head vertical layout */
+  .sp-head { flex-direction: column; align-items: flex-start; text-align: right; }
+
+  /* Footer contacts stack */
+  .doc-footer { padding: 24px 14px; }
+}
 </style>
 </head>
 <body>
@@ -1320,11 +1481,7 @@ body.light-theme .pct-num { color: #1565C0; }
     <div class="cover-card">
       <div class="cover-card-icon">📅</div>
       <div class="cover-card-label">DATE</div>
-      <div class="cover-card-val"
-        data-ar="20 سبتمبر – 10 أكتوبر 2026"
-        data-en="20 September – 10 October 2026"
-        data-fr="20 Septembre – 10 Octobre 2026"
-      >20 سبتمبر – 10 أكتوبر 2026</div>
+      <div class="cover-card-val" style="direction:ltr; unicode-bidi:plaintext;" data-ar="20 سبتمبر – 10 أكتوبر 2026" data-en="20 September – 10 October 2026" data-fr="20 Septembre – 10 Octobre 2026">20 سبتمبر – 10 أكتوبر 2026</div>
     </div>
     <div class="cover-card">
       <div class="cover-card-icon">📍</div>
@@ -1388,6 +1545,7 @@ body.light-theme .pct-num { color: #1565C0; }
     </div>
   </div>
 
+  <div style="page-break-inside: avoid; break-inside: avoid;">
   <div class="nature-box" style="border-right-color:var(--cyan); background:linear-gradient(135deg,rgba(0,212,255,0.05),transparent);" data-ar="&lt;strong style='color:var(--cyan);'&gt;⚙️ آلية المسابقة:&lt;/strong&gt;&lt;br&gt;&lt;ul style='list-style-type:none;padding-right:10px;margin-top:8px;'&gt;&lt;li style='margin-bottom:6px;'&gt;&lt;span class='cyan'&gt;▸&lt;/span&gt; تطرح كل مؤسسة شريكة مشكلة حقيقية أو تحديًا تقنيًا قبل &lt;strong&gt;10 أيام&lt;/strong&gt; من الموعد.&lt;/li&gt;&lt;li style='margin-bottom:6px;'&gt;&lt;span class='cyan'&gt;▸&lt;/span&gt; يتنافس المشاركون على تقديم حلول مبتكرة وقابلة للتطبيق لتلك التحديات.&lt;/li&gt;&lt;li&gt;&lt;span class='cyan'&gt;▸&lt;/span&gt; تُقيّم الحلول الأولية عن بُعد وتُختار &lt;strong&gt;أفضل 10 حلول&lt;/strong&gt; لكل مجال للحضور الميداني والمنافسة النهائية.&lt;/li&gt;&lt;/ul&gt;" data-en="&lt;strong style='color:var(--cyan);'&gt;⚙️ How the Competition Works:&lt;/strong&gt;&lt;br&gt;&lt;ul style='list-style-type:none;padding-right:10px;margin-top:8px;'&gt;&lt;li style='margin-bottom:6px;'&gt;&lt;span class='cyan'&gt;▸&lt;/span&gt; Each partner institution submits a real problem or technical challenge &lt;strong&gt;10 days&lt;/strong&gt; before the event.&lt;/li&gt;&lt;li style='margin-bottom:6px;'&gt;&lt;span class='cyan'&gt;▸&lt;/span&gt; Participants compete to deliver innovative and applicable solutions to those challenges.&lt;/li&gt;&lt;li&gt;&lt;span class='cyan'&gt;▸&lt;/span&gt; Initial solutions are evaluated remotely and the &lt;strong&gt;top 10 solutions&lt;/strong&gt; per track are selected for the on-site final competition.&lt;/li&gt;&lt;/ul&gt;" data-fr="&lt;strong style='color:var(--cyan);'&gt;⚙️ Comment fonctionne la Compétition:&lt;/strong&gt;&lt;br&gt;&lt;ul style='list-style-type:none;padding-right:10px;margin-top:8px;'&gt;&lt;li style='margin-bottom:6px;'&gt;&lt;span class='cyan'&gt;▸&lt;/span&gt; Chaque institution partenaire soumet un vrai problème ou défi technique &lt;strong&gt;10 jours&lt;/strong&gt; avant l'événement.&lt;/li&gt;&lt;li style='margin-bottom:6px;'&gt;&lt;span class='cyan'&gt;▸&lt;/span&gt; Les participants rivalisent pour proposer des solutions innovantes et applicables à ces défis.&lt;/li&gt;&lt;li&gt;&lt;span class='cyan'&gt;▸&lt;/span&gt; Les solutions initiales sont évaluées à distance et les &lt;strong&gt;10 meilleures solutions&lt;/strong&gt; par axe sont sélectionnées pour la compétition finale sur site.&lt;/li&gt;&lt;/ul&gt;">
     <strong style="color:var(--cyan);">⚙️ آلية المسابقة:</strong><br>
     <ul style="list-style-type:none; padding-right:10px; margin-top:8px;">
@@ -1417,6 +1575,7 @@ body.light-theme .pct-num { color: #1565C0; }
       </div>
     </div>
   </div>
+  </div>
 
   <!-- ─── S2: WHY NEXUS & ROI ─── -->
   <div class="sec-head">
@@ -1430,8 +1589,13 @@ body.light-theme .pct-num { color: #1565C0; }
 
   <div class="panel" style="margin-bottom: 20px; border-top: 3px solid var(--cyan)">
     <p style="font-size: 13px; line-height: 1.8; color: var(--text);">
-      <span data-ar="تمثل <strong>Nexus 4.0</strong> نقطة التقاء تاريخية في بيئة الأعمال الجزائرية، حيث لا نكتفي برعاية الأفكار، بل نصنع حلولاً فعلية. بفضل الإرث القوي لثلاث نسخ ناجحة، تجمع المسابقة مئات الطلبة المهندسين والمبتكرين في مكان واحد، مما يكسر كل الحواجز بين القطاع الأكاديمي، والمؤسسي، والحكومي." data-en="<strong>Nexus 4.0</strong> represents a historic convergence point in Algeria's business landscape — where we don't just sponsor ideas, we build real solutions. Backed by the strong legacy of three successful editions, the competition unites hundreds of engineering students and innovators under one roof, breaking every barrier between the academic, institutional, and governmental sectors." data-fr="<strong>Nexus 4.0</strong> représente un point de convergence historique dans le monde des affaires algérien — où nous ne nous contentons pas de parrainer des idées, nous construisons de vraies solutions. Fort de l'héritage de trois éditions réussies, la compétition réunit des centaines d'étudiants ingénieurs et innovateurs en un seul lieu, brisant toutes les barrières entre les secteurs académique, institutionnel et gouvernemental.">تمثل <strong>Nexus 4.0</strong> نقطة التقاء تاريخية في بيئة الأعمال الجزائرية، حيث لا نكتفي برعاية الأفكار، بل نصنع حلولاً فعلية. بفضل الإرث القوي لثلاث نسخ ناجحة، تجمع المسابقة مئات الطلبة المهندسين والمبتكرين في مكان واحد، مما يكسر كل الحواجز بين القطاع الأكاديمي، والمؤسسي، والحكومي.</span>
+      <span data-ar="تمثل <strong>Nexus 4.0</strong> نقطة التقاء تاريخية في بيئة الأعمال الجزائرية، حيث لا نكتفي برعاية الأفكار، بل نصنع حلولاً فعلية. بوصفها <strong>النسخة الافتتاحية الأولى</strong> من نوعها، تطمح المسابقة لجمع مئات الطلبة المهندسين والمبتكرين في مكان واحد، لكسر كل الحواجز بين القطاع الأكاديمي، والمؤسسي، والحكومي." data-en="<strong>Nexus 4.0</strong> represents a historic convergence point in Algeria's business landscape — where we don't just sponsor ideas, we build real solutions. As the <strong>very first edition</strong> of its kind, the competition aspires to unite hundreds of engineering students and innovators under one roof, breaking every barrier between the academic, institutional, and governmental sectors." data-fr="<strong>Nexus 4.0</strong> représente un point de convergence historique dans le monde des affaires algérien — où nous ne nous contentons pas de parrainer des idées, nous construisons de vraies solutions. En tant que <strong>toute première édition</strong>, la compétition aspire à réunir des centaines d'étudiants ingénieurs et innovateurs en un seul lieu, brisant toutes les barrières entre les secteurs académique, institutionnel et gouvernemental.">تمثل <strong>Nexus 4.0</strong> نقطة التقاء تاريخية في بيئة الأعمال الجزائرية، حيث لا نكتفي برعاية الأفكار، بل نصنع حلولاً فعلية. بوصفها <strong>النسخة الافتتاحية الأولى</strong> من نوعها، تطمح المسابقة لجمع مئات الطلبة المهندسين والمبتكرين في مكان واحد، لكسر كل الحواجز بين القطاع الأكاديمي، والمؤسسي، والحكومي.</span>
     </p>
+  </div>
+
+  <!-- University Track Record -->
+  <div class="panel" style="margin-bottom: 20px; border-right: 2px solid var(--green); font-size:13px; line-height:1.9;">
+    <span data-ar="🏛️ <strong style='color:var(--gold-l);'>إرث جامعة البليدة 1 في تنظيم الفعاليات العلمية:</strong><br>تُعد جامعة البليدة 1 من أكثر الجامعات الجزائرية نشاطاً في تنظيم الفعاليات التقنية والابتكارية. فهي <strong>تستضيف سنوياً</strong> العديد من الهاكاثونات، مسابقات الروبوتيك، وتحديات البرمجة التي حققت نجاحاً كبيراً عبر نواديها العلمية المعتمدة مثل: <strong>Computer Science Community Club، IT Community Club</strong> وغيرها. هذا الإرث التنظيمي يضمن تنفيذ Nexus 4.0 باحترافية وجودة عالية." data-en="🏛️ <strong style='color:var(--gold-l);'>University of Blida 1 — A Proven Event Organizer:</strong><br>The University of Blida 1 is one of Algeria's most active universities in organizing technical and innovation events. It <strong>hosts annually</strong> numerous successful hackathons, robotics competitions, and programming challenges through its accredited scientific clubs such as <strong>Computer Science Community Club, IT Community Club</strong> and more. This organizational heritage guarantees the professional and high-quality execution of Nexus 4.0." data-fr="🏛️ <strong style='color:var(--gold-l);'>Université de Blida 1 — Un Organisateur d'Événements de Référence:</strong><br>L'Université de Blida 1 est l'une des universités les plus actives d'Algérie dans l'organisation d'événements techniques et d'innovation. Elle <strong>accueille chaque année</strong> de nombreux hackathons, compétitions de robotique et défis de programmation réussis grâce à ses clubs scientifiques accrédités tels que <strong>Computer Science Community Club, IT Community Club</strong> et d'autres. Cet héritage organisationnel garantit l'exécution professionnelle de Nexus 4.0.">🏛️ <strong style="color:var(--gold-l);">إرث جامعة البليدة 1 في تنظيم الفعاليات العلمية:</strong><br>تُعد جامعة البليدة 1 من أكثر الجامعات الجزائرية نشاطاً في تنظيم الفعاليات التقنية والابتكارية. فهي <strong>تستضيف سنوياً</strong> العديد من الهاكاثونات، مسابقات الروبوتيك، وتحديات البرمجة التي حققت نجاحاً كبيراً عبر نواديها العلمية المعتمدة مثل: <strong>Computer Science Community Club، IT Community Club</strong> وغيرها. هذا الإرث التنظيمي يضمن تنفيذ Nexus 4.0 باحترافية وجودة عالية.</span>
   </div>
 
   <div class="obj-grid">
@@ -1595,33 +1759,106 @@ body.light-theme .pct-num { color: #1565C0; }
   </div>
 
 
-  <div class="themes-grid" style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px;">
-    <div class="theme-card" style="grid-column: span 2;">
-      <div class="theme-icon">🏭</div>
-      <div class="theme-name" data-ar="الصناعة" data-en="Industry" data-fr="Industrie">الصناعة</div>
-      <div class="theme-desc" style="margin-top:6px;font-size:11px;"><strong style="color:var(--gold-l);" data-ar="متاح للرعاية" data-en="Available for Sponsorship" data-fr="Disponible au Parrainage">متاح للرعاية</strong></div>
+  <!-- 5 themes from Word doc -->
+  <div class="themes-grid" style="grid-template-columns: repeat(5,1fr);">
+
+    <div class="theme-card" style="border-top-color:#FFB347;">
+      <div class="theme-icon">⚡</div>
+      <div class="theme-name" data-ar="الطاقة وإزالة الكربون" data-en="Energy &amp; Decarbonization" data-fr="Énergie &amp; Décarbonation">الطاقة وإزالة الكربون</div>
+      <div class="theme-desc" data-ar="الكفاءة الطاقوية، الصيانة التنبؤية، الطاقات المتجددة، الهيدروجين، تحسين الماء والطاقة" data-en="Energy efficiency, predictive maintenance, renewables, hydrogen, water-energy optimization" data-fr="Efficacité énergétique, maintenance prédictive, ENR, hydrogène, optimisation eau-énergie">الكفاءة الطاقوية، الصيانة التنبؤية، الطاقات المتجددة، الهيدروجين</div>
     </div>
-    <div class="theme-card" style="grid-column: span 2;">
+
+    <div class="theme-card" style="border-top-color:var(--cyan);">
+      <div class="theme-icon">🏗️</div>
+      <div class="theme-name" data-ar="الهندسة والصناعة 4.0" data-en="Engineering &amp; Industry 4.0" data-fr="Ingénierie &amp; Industrie 4.0">الهندسة والصناعة 4.0</div>
+      <div class="theme-desc" data-ar="الأتمتة، التوأم الرقمي، الاستشعار، تحسين خطوط الإنتاج، الجودة الصناعية" data-en="Automation, digital twin, sensors, production line optimization, industrial quality" data-fr="Automatisation, jumeau numérique, capteurs, optimisation de production, qualité industrielle">الأتمتة، التوأم الرقمي، الاستشعار، تحسين خطوط الإنتاج</div>
+    </div>
+
+    <div class="theme-card" style="border-top-color:#4CAF50;">
       <div class="theme-icon">🌾</div>
-      <div class="theme-name" data-ar="الزراعة" data-en="Agriculture" data-fr="Agriculture">الزراعة</div>
-      <div class="theme-desc" style="margin-top:6px;font-size:11px;"><strong style="color:var(--gold-l);" data-ar="متاح للرعاية" data-en="Available for Sponsorship" data-fr="Disponible au Parrainage">متاح للرعاية</strong></div>
+      <div class="theme-name" data-ar="الغذاء والزراعة والمياه" data-en="Agri-food, Agriculture &amp; Water" data-fr="Agroalimentaire, Agriculture &amp; Eau">الغذاء والزراعة والمياه</div>
+      <div class="theme-desc" data-ar="ري ذكي، تتبع الجودة، سلسلة التبريد، تقليل الهدر، تحسين العمليات الزراعية" data-en="Smart irrigation, quality traceability, cold chain, waste reduction, agri-process optimization" data-fr="Irrigation intelligente, traçabilité qualité, chaîne du froid, réduction des déchets">ري ذكي، تتبع الجودة، سلسلة التبريد، تقليل الهدر</div>
     </div>
-    <div class="theme-card" style="border-top-color:var(--cyan); grid-column: span 2;">
-      <div class="theme-icon">🔒</div>
-      <div class="theme-name" data-ar="أمن الشبكات" data-en="Network Security" data-fr="Sécurité des Réseaux">أمن الشبكات</div>
-      <div class="theme-desc" style="margin-top:6px;font-size:11px;"><strong style="color:var(--gold-l);" data-ar="متاح للرعاية" data-en="Available for Sponsorship" data-fr="Disponible au Parrainage">متاح للرعاية</strong></div>
+
+    <div class="theme-card" style="border-top-color:#E91E8C;">
+      <div class="theme-icon">💊</div>
+      <div class="theme-name" data-ar="الصحة والصيدلة والتكنولوجيا الحيوية" data-en="Pharma, Health &amp; Biotech" data-fr="Pharma, Santé &amp; Biotechnologies">الصحة والصيدلة والتكنولوجيا الحيوية</div>
+      <div class="theme-desc" data-ar="مراقبة الجودة، الرقمنة المخبرية، اللوجستيك الصيدلاني، تقليل الهدر الإنتاجي" data-en="Quality control, lab digitalization, pharma logistics, production waste reduction" data-fr="Contrôle qualité, digitalisation laboratoires, logistique pharmaceutique, réduction des déchets">مراقبة الجودة، الرقمنة المخبرية، اللوجستيك الصيدلاني</div>
     </div>
-    <div class="theme-card" style="border: 1px dashed var(--border-g); border-top: 2px dashed var(--gold); background: rgba(201,168,76,0.02); grid-column: span 3;">
-      <div class="theme-icon">✨</div>
-      <div class="theme-name" data-ar="محور اختياري" data-en="Optional Track" data-fr="Axe Optionnel">محور اختياري</div>
-      <div class="theme-desc" style="margin-top:6px;font-size:11px;"><strong style="color:var(--gold-l);" data-ar="يمكن للراعي الذهبي اقتراح تحدي خاص" data-en="The Gold Sponsor may propose a custom challenge" data-fr="Le Sponsor Or peut proposer un défi personnalisé">يمكن للراعي الذهبي اقتراح تحدي خاص</strong></div>
-    </div>
-    <div class="theme-card" style="border: 1px dashed var(--border-g); border-top: 2px dashed var(--gold); background: rgba(201,168,76,0.02); grid-column: span 3;">
-      <div class="theme-icon">✨</div>
-      <div class="theme-name" data-ar="محور اختياري" data-en="Optional Track" data-fr="Axe Optionnel">محور اختياري</div>
-      <div class="theme-desc" style="margin-top:6px;font-size:11px;"><strong style="color:var(--gold-l);" data-ar="يمكن للراعي الذهبي اقتراح تحدي خاص" data-en="The Gold Sponsor may propose a custom challenge" data-fr="Le Sponsor Or peut proposer un défi personnalisé">يمكن للراعي الذهبي اقتراح تحدي خاص</strong></div>
+
+    <div class="theme-card" style="border-top-color:#9C27B0;">
+      <div class="theme-icon">🛡️</div>
+      <div class="theme-name" data-ar="الاتصالات والذكاء الاصطناعي والأمن السيبراني" data-en="Telecom, AI &amp; Cybersecurity" data-fr="Télécom, IA &amp; Cybersécurité">الاتصالات والذكاء الاصطناعي والأمن السيبراني</div>
+      <div class="theme-desc" data-ar="تحسين الشبكات، ذكاء اصطناعي تطبيقي، أمن سيبراني، إنترنت الأشياء، منصات البيانات" data-en="Network optimization, applied AI, cybersecurity, IoT, smart campus, data platforms" data-fr="Optimisation réseau, IA appliquée, cybersécurité, IoT, smart campus, data platforms">تحسين الشبكات، ذكاء اصطناعي تطبيقي، أمن سيبراني، إنترنت الأشياء</div>
     </div>
   </div>
+
+  <!-- ── Contact Us for Custom Challenge ── -->
+  <div id="propose-section" style="
+    background: linear-gradient(135deg, rgba(201,168,76,0.05), rgba(0,212,255,0.04));
+    border: 1px solid var(--border-g);
+    border-top: 3px solid var(--gold);
+    border-radius: 14px;
+    padding: 28px 30px;
+    margin-bottom: 20px;
+  ">
+    <div style="display:flex; align-items:center; gap:14px; margin-bottom:20px;">
+      <span style="font-size:32px;">💡</span>
+      <div>
+        <div style="font-size:15px; font-weight:700; color:var(--gold-l);"
+          data-ar="هل لديكم إشكالية تقنية مختلفة؟ تواصلوا معنا!"
+          data-en="Do you have a different technical challenge? Contact us!"
+          data-fr="Vous avez un défi technique différent ? Contactez-nous !"
+        >هل لديكم إشكالية تقنية مختلفة؟ تواصلوا معنا!</div>
+        <div style="font-size:11px; color:var(--text-dim); margin-top:3px;"
+          data-ar="إذا كانت مؤسستكم تواجه تحديًا تقنيًا حقيقيًا خارج المحاور المذكورة، يسعدنا دراسة إمكانية إدراجه ضمن مسابقة Nexus 4.0."
+          data-en="If your company faces a real technical challenge outside the listed tracks, we would be happy to study its inclusion in the Nexus 4.0 competition."
+          data-fr="Si votre entreprise fait face à un défi technique réel en dehors des axes listés, nous serons heureux d'étudier son intégration dans la compétition Nexus 4.0."
+        >إذا كانت مؤسستكم تواجه تحديًا تقنيًا حقيقيًا خارج المحاور المذكورة، يسعدنا دراسة إمكانية إدراجه ضمن مسابقة Nexus 4.0.</div>
+      </div>
+    </div>
+
+    <div style="display:flex; flex-wrap:wrap; gap:14px;">
+      <div style="flex:1; min-width:200px; background:rgba(0,212,255,0.05); border:1px solid var(--border); border-radius:10px; padding:16px 18px; display:flex; align-items:center; gap:12px;">
+        <span style="font-size:22px;">📧</span>
+        <div>
+          <div style="font-size:9px; color:var(--cyan); letter-spacing:1px; margin-bottom:4px;"
+            data-ar="البريد الإلكتروني"
+            data-en="EMAIL"
+            data-fr="EMAIL"
+          >البريد الإلكتروني</div>
+          <div style="font-size:12px; color:var(--text); font-weight:600;">mohameddz1105@gmail.com</div>
+        </div>
+      </div>
+      <div style="flex:1; min-width:200px; background:rgba(0,212,255,0.05); border:1px solid var(--border); border-radius:10px; padding:16px 18px; display:flex; align-items:center; gap:12px;">
+        <span style="font-size:22px;">📱</span>
+        <div>
+          <div style="font-size:9px; color:var(--cyan); letter-spacing:1px; margin-bottom:4px;"
+            data-ar="الهاتف"
+            data-en="PHONE"
+            data-fr="TÉLÉPHONE"
+          >الهاتف</div>
+          <div style="font-size:12px; color:var(--text); font-weight:600; direction:ltr;">0540 92 39 09</div>
+        </div>
+      </div>
+      <div style="flex:1; min-width:200px; background:rgba(201,168,76,0.06); border:1px solid var(--border-g); border-radius:10px; padding:16px 18px; display:flex; align-items:center; gap:12px;">
+        <span style="font-size:22px;">📍</span>
+        <div>
+          <div style="font-size:9px; color:var(--gold-l); letter-spacing:1px; margin-bottom:4px;"
+            data-ar="الموقع"
+            data-en="LOCATION"
+            data-fr="LIEU"
+          >الموقع</div>
+          <div style="font-size:12px; color:var(--text); font-weight:600;"
+            data-ar="جامعة البليدة 1"
+            data-en="University of Blida 1"
+            data-fr="Université de Blida 1"
+          >جامعة البليدة 1</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
 
 
 
@@ -1669,7 +1906,7 @@ body.light-theme .pct-num { color: #1565C0; }
       <tr>
         <td><strong data-ar="🥗 إطعام ضيوف الشرف" data-en="🥗 VIP Guest Meals" data-fr="🥗 Repas Invités VIP">🥗 إطعام ضيوف الشرف</strong></td>
         <td><span data-ar="حتى 100 شخص — لجنة التقييم، وزراء، مستثمرون — وجبة مميزة" data-en="Up to 100 people — jury, ministers, investors — premium meal" data-fr="Jusqu'à 100 personnes — jury, ministres, investisseurs — repas premium">حتى 100 شخص — لجنة التقييم، وزراء، مستثمرون — وجبة مميزة</span></td>
-        <td><span class="amt-tbd" data-ar="يُحدَّد مع المورد" data-en="To be confirmed with supplier" data-fr="À confirmer avec le fournisseur">يُحدَّد مع المورد</span></td>
+        <td><span class="amt" data-ar="2,500 دج/شخص" data-en="2,500 DZD/person" data-fr="2 500 DA/personne">2,500 دج/شخص</span><br><small class="dim">~250,000 دج</small></td>
       </tr>
       <tr>
         <td><strong data-ar="🏆 الجوائز المالية" data-en="🏆 Cash Prizes" data-fr="🏆 Prix Financiers">🏆 الجوائز المالية</strong></td>
@@ -1684,24 +1921,40 @@ body.light-theme .pct-num { color: #1565C0; }
       <tr>
         <td><strong data-ar="🖨️ الطباعة والهوية البصرية" data-en="🖨️ Printing &amp; Visual Identity" data-fr="🖨️ Impression et Identité Visuelle">🖨️ الطباعة والهوية البصرية</strong></td>
         <td><span data-ar="شارات + أحزمة لـ500 شخص، خلفية المسرح، لافتات Roll-up" data-en="Badges + lanyards for 500 people, stage backdrop, Roll-up banners" data-fr="Badges + cordons pour 500 personnes, fond de scène, bannières Roll-up">شارات + أحزمة لـ500 شخص، خلفية المسرح، لافتات Roll-up</span></td>
-        <td><span class="amt-tbd" data-ar="يُحدَّد مع المورد" data-en="To be confirmed with supplier" data-fr="À confirmer avec le fournisseur">يُحدَّد مع المورد</span></td>
+        <td><span class="amt" data-ar="110,000 دج" data-en="110,000 DZD" data-fr="110 000 DA">110,000 دج</span></td>
       </tr>
       <tr>
         <td><strong data-ar="⛺ الخيام والأجنحة" data-en="⛺ Tents &amp; Pavilions" data-fr="⛺ Tentes et Pavillons">⛺ الخيام والأجنحة</strong></td>
         <td><span data-ar="خيام بيضاء للمعرض الخارجي، طاولات، كراسي إضافية" data-en="White tents for outdoor exhibition, extra tables and chairs" data-fr="Tentes blanches pour l'exposition extérieure, tables et chaises supplémentaires">خيام بيضاء للمعرض الخارجي، طاولات، كراسي إضافية</span></td>
-        <td><span class="amt-tbd" data-ar="يُحدَّد مع المورد" data-en="To be confirmed with supplier" data-fr="À confirmer avec le fournisseur">يُحدَّد مع المورد</span></td>
+        <td><span class="amt" data-ar="95,000 دج" data-en="95,000 DZD" data-fr="95 000 DA">95,000 دج</span></td>
       </tr>
 
       <tr>
         <td><strong data-ar="📱 الإعلان الرقمي" data-en="📱 Digital Advertising" data-fr="📱 Publicité Numérique">📱 الإعلان الرقمي</strong></td>
         <td><span data-ar="حملات Instagram Ads + Facebook Ads" data-en="Instagram Ads + Facebook Ads campaigns" data-fr="Campagnes Instagram Ads + Facebook Ads">حملات Instagram Ads + Facebook Ads</span></td>
-        <td><span class="amt-tbd" data-ar="يُحدَّد حسب الميزانية" data-en="To be determined per budget" data-fr="À déterminer selon le budget">يُحدَّد حسب الميزانية</span></td>
+        <td><span class="amt" data-ar="27,000 دج" data-en="27,000 DZD" data-fr="27 000 DA">27,000 دج</span></td>
       </tr>
     </tbody>
     <tfoot>
-      <tr>
-        <td colspan="2"><span data-ar="+ هامش احتياطي 15% يُضاف على المجموع النهائي لتغطية المصاريف الطارئة" data-en="+ 15% contingency margin added to the final total for unexpected expenses" data-fr="+ Marge de contingence de 15% ajoutée au total final pour les dépenses imprévues">+ هامش احتياطي 15% يُضاف على المجموع النهائي لتغطية المصاريف الطارئة</span></td>
-        <td style="color:var(--gold-l)"><span data-ar="تلقائي" data-en="Automatic" data-fr="Automatique">تلقائي</span></td>
+      <tr style="background:rgba(201,168,76,0.06); border-top:2px solid var(--border-g);">
+        <td colspan="2" style="color:var(--text-dim); font-size:11px;"
+          data-ar="📊 المجموع الأدنى للميزانية (بدون هامش الاحتياط — 3 محاور)" data-en="📊 Minimum Budget (excl. contingency — 3 tracks)" data-fr="📊 Budget Minimum (hors marge — 3 axes)">📊 المجموع الأدنى للميزانية (بدون هامش الاحتياط — 3 محاور)</td>
+        <td><span class="amt" style="color:var(--cyan);">1,112,000 دج</span></td>
+      </tr>
+      <tr style="background:rgba(201,168,76,0.04);">
+        <td colspan="2" style="color:var(--text-dim); font-size:11px;"
+          data-ar="📊 المجموع الأقصى للميزانية (بدون هامش الاحتياط — 5 محاور)" data-en="📊 Maximum Budget (excl. contingency — 5 tracks)" data-fr="📊 Budget Maximum (hors marge — 5 axes)">📊 المجموع الأقصى للميزانية (بدون هامش الاحتياط — 5 محاور)</td>
+        <td><span class="amt" style="color:var(--cyan);">1,252,000 دج</span></td>
+      </tr>
+      <tr style="background:rgba(201,168,76,0.1); border-top:2px solid rgba(201,168,76,0.3);">
+        <td colspan="2" style="font-weight:700;"
+          data-ar="✨ الميزانية الإجمالية الدنيا (+15% احتياطي)" data-en="✨ Total Budget MIN (+15% contingency)" data-fr="✨ Budget Total MINIMUM (+15% de marge)">✨ الميزانية الإجمالية الدنيا (+15% احتياطي)</td>
+        <td><span class="amt" style="color:var(--gold-l); font-size:13px; filter:drop-shadow(0 0 6px rgba(201,168,76,0.4));">1,278,800 دج</span></td>
+      </tr>
+      <tr style="background:rgba(201,168,76,0.12);">
+        <td colspan="2" style="font-weight:700;"
+          data-ar="✨ الميزانية الإجمالية القصوى (+15% احتياطي)" data-en="✨ Total Budget MAX (+15% contingency)" data-fr="✨ Budget Total MAXIMUM (+15% de marge)">✨ الميزانية الإجمالية القصوى (+15% احتياطي)</td>
+        <td><span class="amt" style="color:var(--gold-l); font-size:13px; filter:drop-shadow(0 0 6px rgba(201,168,76,0.4));">1,439,800 دج</span></td>
       </tr>
     </tfoot>
   </table>
@@ -1788,19 +2041,26 @@ body.light-theme .pct-num { color: #1565C0; }
     <div class="sp-head">
       <div class="sp-medal">🥇</div>
       <div class="sp-title">
-        <h3 data-ar="الراعي الذهبي — الشريك الرسمي" data-en="Gold Sponsor — Official Partner" data-fr="Sponsor Or — Partenaire Officiel">الراعي الذهبي — الشريك الرسمي</h3>
-        <div class="sub" data-ar="الراعي الذهبي" data-en="GOLD SPONSOR — OFFICIAL PARTNER" data-fr="SPONSOR OR — PARTENAIRE OFFICIEL">GOLD SPONSOR — OFFICIAL PARTNER</div>
+        <h3 data-ar="الشريك الذهبي — الشريك الاستراتيجي الرسمي" data-en="Gold Partner — Official Strategic Partner" data-fr="Partenaire Or — Partenaire Stratégique Officiel">الشريك الذهبي — الشريك الاستراتيجي الرسمي</h3>
+        <div class="sub" data-ar="الشريك الذهبي" data-en="GOLD PARTNER — OFFICIAL STRATEGIC PARTNER" data-fr="PARTENAIRE OR — PARTENAIRE STRATÉGIQUE OFFICIEL">GOLD PARTNER — OFFICIAL STRATEGIC PARTNER</div>
+      </div>
+      <div style="margin-right:auto; text-align:center; background:rgba(201,168,76,0.12); border:1px solid rgba(201,168,76,0.4); border-radius:10px; padding:8px 20px;">
+        <div style="font-family:'Orbitron',monospace; font-size:11px; color:rgba(201,168,76,0.6); letter-spacing:1px; margin-bottom:2px;"
+          data-ar="على الأقل" data-en="AT LEAST" data-fr="AU MOINS"
+        >على الأقل</div>
+        <div style="font-family:'Orbitron',monospace; font-size:22px; font-weight:900; color:var(--gold-l); filter:drop-shadow(0 0 8px rgba(201,168,76,0.4));">225,000 <span style="font-size:12px;">DZD</span></div>
       </div>
     </div>
     <div class="sp-body">
       <div class="sp-benefits">
         <div class="sp-benefit"><span class="sp-bi">🏷️</span><span data-ar="تسمية أحد المحاور التنافسية باسم الشركة لتحدي الطلبة مباشرة" data-en="Name a competitive track after your company to directly challenge students" data-fr="Nommer un axe compétitif au nom de votre entreprise pour défier directement les étudiants">تسمية أحد المحاور التنافسية باسم الشركة لتحدي الطلبة مباشرة</span></div>
         <div class="sp-benefit"><span class="sp-bi">⚖️</span><span data-ar="منح الشركة مقعداً في لجنة التحكيم لاختيار أفضل الحلول" data-en="A company seat on the judging panel to select the best solutions" data-fr="Un siège de l'entreprise au jury pour sélectionner les meilleures solutions">منح الشركة مقعداً في لجنة التحكيم لاختيار أفضل الحلول</span></div>
-        <div class="sp-benefit"><span class="sp-bi">📢</span><span data-ar="تصدّر لوغو الشركة كراعٍ رسمي في صفحات الفيسبوك والإنستغرام للجامعة والنادي" data-en="Company logo featured as Official Sponsor on the University and Club Facebook &amp; Instagram pages" data-fr="Logo de l'entreprise en tant que Sponsor Officiel sur les pages Facebook et Instagram de l'université et du club">تصدّر لوغو الشركة كراعٍ رسمي في صفحات الفيسبوك والإنستغرام للجامعة والنادي</span></div>
+        <div class="sp-benefit"><span class="sp-bi">📢</span><span data-ar="تصدّر لوغو الشركة كشريك استراتيجي رسمي في صفحات الفيسبوك والإنستغرام للجامعة والنادي" data-en="Company logo featured as Official Strategic Partner on the University and Club Facebook &amp; Instagram pages" data-fr="Logo de l'entreprise en tant que Partenaire Stratégique Officiel sur les pages Facebook et Instagram">تصدّر لوغو الشركة كشريك استراتيجي رسمي في صفحات الفيسبوك والإنستغرام للجامعة والنادي</span></div>
         <div class="sp-benefit"><span class="sp-bi">📑</span><span data-ar="الحصول على قاعدة السير الذاتية (CVs) لجميع المشاركين لأغراض التوظيف" data-en="Access to the CV database of all participants for recruitment purposes" data-fr="Accès à la base de CV de tous les participants à des fins de recrutement">الحصول على قاعدة السير الذاتية (CVs) لجميع المشاركين لأغراض التوظيف</span></div>
         <div class="sp-benefit"><span class="sp-bi">📛</span><span data-ar="طباعة شعار الشركة منفرداً على شارات وأحزمة المشاركين (Badges)" data-en="Company logo printed solo on participant badges and lanyards" data-fr="Logo de l'entreprise imprimé seul sur les badges et cordons des participants">طباعة شعار الشركة منفرداً على شارات وأحزمة المشاركين (Badges)</span></div>
         <div class="sp-benefit"><span class="sp-bi">🏢</span><span data-ar="جناح عرض VIP في وسط معرض الطلبة للتفاعل مع الزوار والـ VIP" data-en="VIP exhibition booth at the center of the student fair to engage with visitors and VIPs" data-fr="Stand d'exposition VIP au centre du salon étudiant pour interagir avec les visiteurs et VIPs">جناح عرض VIP في وسط معرض الطلبة للتفاعل مع الزوار والـ VIP</span></div>
         <div class="sp-benefit"><span class="sp-bi">🎤</span><span data-ar="الخطاب الافتتاحي وتكريم الفائزين على منصة الجامعة الرسمية" data-en="Opening speech and winner recognition on the official university stage" data-fr="Discours d'ouverture et remise des prix sur la scène officielle de l'université">الخطاب الافتتاحي وتكريم الفائزين على منصة الجامعة الرسمية</span></div>
+        <div class="sp-benefit" style="background:rgba(201,168,76,0.08); border:1px solid rgba(201,168,76,0.25); border-radius:8px; padding:10px 14px; margin-top:6px;"><span class="sp-bi">🏆</span><span data-ar="<strong style='color:var(--gold-l);'>امتياز الشريك المؤسس:</strong> بصفتكم شريكاً مؤسساً للنسخة الأولى، سيظهر اسم شركتكم وفيديو تقديري في جميع النسخ المستقبلية باعتباركم من ساهم في إنجاح هذا الحدث منذ انطلاقته." data-en="<strong style='color:var(--gold-l);'>Founding Partner Privilege:</strong> As a founding partner of the very first edition, your company name and a tribute video will appear in all future editions — permanently recognized as those who made this event a success from day one." data-fr="<strong style='color:var(--gold-l);'>Privilège de Partenaire Fondateur:</strong> En tant que partenaire fondateur de la toute première édition, le nom de votre entreprise et une vidéo d'hommage figureront dans toutes les éditions futures — reconnus à jamais comme ceux qui ont rendu cet événement possible dès le départ."><strong style="color:var(--gold-l);">امتياز الشريك المؤسس:</strong> بصفتكم شريكاً مؤسساً للنسخة الأولى، سيظهر اسم شركتكم وفيديو تقديري في جميع النسخ المستقبلية باعتباركم من ساهم في إنجاح هذا الحدث منذ انطلاقته.</span></div>
       </div>
     </div>
   </div>
@@ -1810,8 +2070,14 @@ body.light-theme .pct-num { color: #1565C0; }
     <div class="sp-head">
       <div class="sp-medal">🥈</div>
       <div class="sp-title">
-        <h3 data-ar="الراعي الفضي — شريك الدعم" data-en="Silver Sponsor — Support Partner" data-fr="Sponsor Argent — Partenaire de Soutien">الراعي الفضي — شريك الدعم</h3>
-        <div class="sub" data-ar="الراعي الفضي" data-en="SILVER SPONSOR — SUPPORT PARTNER" data-fr="SPONSOR ARGENT — PARTENAIRE DE SOUTIEN">SILVER SPONSOR — SUPPORT PARTNER</div>
+        <h3 data-ar="الشريك الفضي — شريك الدعم" data-en="Silver Partner — Support Partner" data-fr="Partenaire Argent — Partenaire de Soutien">الشريك الفضي — شريك الدعم</h3>
+        <div class="sub" data-ar="الشريك الفضي" data-en="SILVER PARTNER — SUPPORT PARTNER" data-fr="PARTENAIRE ARGENT — PARTENAIRE DE SOUTIEN">SILVER PARTNER — SUPPORT PARTNER</div>
+      </div>
+      <div style="margin-right:auto; text-align:center; background:rgba(138,155,176,0.1); border:1px solid rgba(138,155,176,0.35); border-radius:10px; padding:8px 20px;">
+        <div style="font-family:'Orbitron',monospace; font-size:11px; color:rgba(138,155,176,0.6); letter-spacing:1px; margin-bottom:2px;"
+          data-ar="على الأقل" data-en="AT LEAST" data-fr="AU MOINS"
+        >على الأقل</div>
+        <div style="font-family:'Orbitron',monospace; font-size:22px; font-weight:900; color:#C8D8E8;">130,000 <span style="font-size:12px;">DZD</span></div>
       </div>
     </div>
     <div class="sp-body">
@@ -1830,8 +2096,14 @@ body.light-theme .pct-num { color: #1565C0; }
     <div class="sp-head">
       <div class="sp-medal">🥉</div>
       <div class="sp-title">
-        <h3 data-ar="الراعي البرونزي — شريك الخدمات" data-en="Bronze Sponsor — Logistics Partner" data-fr="Sponsor Bronze — Partenaire Logistique">الراعي البرونزي — شريك الخدمات</h3>
-        <div class="sub" data-ar="الراعي البرونزي" data-en="BRONZE SPONSOR — LOGISTICS PARTNER" data-fr="SPONSOR BRONZE — PARTENAIRE LOGISTIQUE">BRONZE SPONSOR — LOGISTICS PARTNER</div>
+        <h3 data-ar="الشريك البرونزي — شريك الخدمات" data-en="Bronze Partner — Logistics Partner" data-fr="Partenaire Bronze — Partenaire Logistique">الشريك البرونزي — شريك الخدمات</h3>
+        <div class="sub" data-ar="الشريك البرونزي" data-en="BRONZE PARTNER — LOGISTICS PARTNER" data-fr="PARTENAIRE BRONZE — PARTENAIRE LOGISTIQUE">BRONZE PARTNER — LOGISTICS PARTNER</div>
+      </div>
+      <div style="margin-right:auto; text-align:center; background:rgba(160,104,74,0.1); border:1px solid rgba(160,104,74,0.35); border-radius:10px; padding:8px 20px;">
+        <div style="font-family:'Orbitron',monospace; font-size:11px; color:rgba(160,104,74,0.6); letter-spacing:1px; margin-bottom:2px;"
+          data-ar="على الأقل" data-en="AT LEAST" data-fr="AU MOINS"
+        >على الأقل</div>
+        <div style="font-family:'Orbitron',monospace; font-size:22px; font-weight:900; color:#D4956A;">70,000 <span style="font-size:12px;">DZD</span></div>
       </div>
     </div>
     <div class="sp-body">
@@ -1958,16 +2230,44 @@ body.light-theme .pct-num { color: #1565C0; }
       <div style="font-size:9px; letter-spacing:2px; color:var(--cyan); margin-bottom:4px;"
         data-ar="البريد الإلكتروني" data-en="EMAIL" data-fr="E-MAIL"
       >البريد الإلكتروني</div>
-      <div style="font-size:12px; color:rgba(255,255,255,0.7); direction:ltr;">nexus@univ-blida.dz</div>
+      <div style="font-size:12px; color:rgba(255,255,255,0.7); direction:ltr;">mohameddz1105@gmail.com</div>
     </div>
     <div style="text-align:center;">
       <div style="font-size:9px; letter-spacing:2px; color:var(--cyan); margin-bottom:4px;"
         data-ar="الهاتف" data-en="PHONE" data-fr="TÉLÉPHONE"
       >الهاتف</div>
-      <div style="font-size:12px; color:rgba(255,255,255,0.7); direction:ltr;">+213 XX XXX XXXX</div>
+      <div style="font-size:12px; color:rgba(255,255,255,0.7); direction:ltr;">0540 92 39 09</div>
+    </div>
+    <div style="text-align:center;">
+      <div style="font-size:9px; letter-spacing:2px; color:var(--cyan); margin-bottom:4px;"
+        data-ar="الموقع" data-en="LOCATION" data-fr="LIEU"
+      >الموقع</div>
+      <div style="font-size:12px; color:rgba(255,255,255,0.7);"
+        data-ar="جامعة البليدة 1" data-en="University of Blida 1" data-fr="Université de Blida 1"
+      >جامعة البليدة 1</div>
     </div>
   </div>
-  <div class="footer-div" style="margin-top:20px;"></div>
+  <div style="margin-top:24px; margin-bottom:24px; display:flex; justify-content:center;">
+    <div style="padding:16px 20px; border:1px solid rgba(0,212,255,0.2); border-radius:12px; display:flex; align-items:center; gap:16px; background:rgba(0,0,0,0.15); max-width:440px;">
+      <div style="background:white; padding:4px; border-radius:8px; display:flex; flex-shrink:0;">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=https://tomy11027.github.io/nexus-sponsorship/" alt="Nexus QR Code" style="width:70px; height:70px;">
+      </div>
+      <div>
+        <div style="font-size:12px; color:var(--cyan); margin-bottom:4px; font-weight:700;"
+          data-ar="النسخة الرقمية التفاعلية"
+          data-en="Interactive Digital Version"
+          data-fr="Version Numérique Interactive"
+        >النسخة الرقمية التفاعلية</div>
+        <div style="font-size:10.5px; color:rgba(255,255,255,0.7); line-height:1.5; margin-bottom:6px;"
+          data-ar="امسح الرمز أو قم بزيارة الرابط للوصول إلى النسخة الإلكترونية (Web):"
+          data-en="Scan the QR code or visit the link to access the web version:"
+          data-fr="Scannez le code QR ou visitez le lien pour accéder à la version web :"
+        >امسح الرمز أو قم بزيارة الرابط للوصول إلى النسخة الإلكترونية (Web):</div>
+        <a href="https://tomy11027.github.io/nexus-sponsorship/" style="font-size:11px; color:var(--gold-l); text-decoration:none; border-bottom:1px solid var(--gold-d); padding-bottom:1px; direction:ltr; display:inline-block;" target="_blank">https://tomy11027.github.io/nexus-sponsorship/</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-div"></div>
   <div class="footer-note"
     data-ar="وثيقة رسمية — سرية ومخصصة للشركاء المحتملين فقط"
     data-en="Official Document — Confidential, for prospective partners only"
